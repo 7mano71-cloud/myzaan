@@ -1,0 +1,1522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Myzaan — ميزان | Personal Finance</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --n950:#080C14;--n900:#0C1120;--n800:#101828;
+  --n700:#152038;--n600:#1B2A4A;--n500:#243459;--n400:#2E4070;
+  --gold:#E2B96A;--gold2:#C89A42;--gold3:#9E7520;
+  --glow:rgba(226,185,106,.15);--gedge:rgba(226,185,106,.28);
+  --silver:#C0C0C0;--silver2:#A8A8A8;--silver-glow:rgba(192,192,192,.12);--silver-edge:rgba(192,192,192,.25);
+  --em:#2ECC8E;--em-d:rgba(46,204,142,.12);
+  --rb:#E05B5B;--rb-d:rgba(224,91,91,.12);
+  --sky:#4D9FE8;--sky-d:rgba(77,159,232,.12);
+  --moon:#A78BFA;--moon-d:rgba(167,139,250,.12);
+  --t1:#F0EDE6;--t2:#BDB9B0;--t4:#7A7870;--t6:#3C3A38;
+  --bdr:rgba(226,185,106,.12);--bdr2:rgba(226,185,106,.3);
+  --rxl:20px;--rlg:14px;--rmd:10px;--rsm:7px;
+  --sh-md:0 6px 24px rgba(0,0,0,.4);
+  --sh-lg:0 16px 48px rgba(0,0,0,.55);
+  --sh-gold:0 0 32px rgba(226,185,106,.1);
+  --ease:cubic-bezier(.4,0,.2,1);
+  --spring:cubic-bezier(.34,1.56,.64,1);
+  --sb-w:260px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Outfit',sans-serif;background:var(--n950);color:var(--t1);min-height:100vh;overflow-x:hidden;font-size:14px;line-height:1.5}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 50% at 10% 0%,rgba(226,185,106,.06) 0%,transparent 60%),radial-gradient(ellipse 60% 60% at 90% 100%,rgba(77,159,232,.04) 0%,transparent 50%),repeating-linear-gradient(0deg,transparent,transparent 60px,rgba(226,185,106,.015) 60px,rgba(226,185,106,.015) 61px);pointer-events:none;z-index:0}
+
+/* SIDEBAR */
+#sidebar{position:fixed;left:0;top:0;bottom:0;width:var(--sb-w);background:var(--n900);border-right:1px solid var(--bdr);display:flex;flex-direction:column;z-index:50;transition:transform .32s var(--ease);overflow-y:auto}
+@media(max-width:960px){
+  #sidebar{transform:translateX(-100%);z-index:500}
+  #sidebar.open{transform:translateX(0);box-shadow:8px 0 40px rgba(0,0,0,.6)}
+}
+
+/* MOBILE HEADER */
+#mob-header{display:none;position:fixed;top:0;left:0;right:0;height:58px;background:var(--n900);border-bottom:1px solid var(--bdr);align-items:center;justify-content:space-between;padding:0 18px;z-index:600}
+.mob-brand{font-family:'Cormorant Garamond',serif;font-size:26px;font-style:italic;background:linear-gradient(135deg,var(--gold),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+#mob-toggle{width:40px;height:40px;border-radius:var(--rsm);background:var(--n700);border:1px solid var(--bdr);color:var(--t2);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+#mob-toggle:hover,#mob-toggle:active{background:var(--n500);color:var(--gold)}
+
+/* OVERLAY */
+#overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(6px);z-index:300}
+#overlay.open{display:block}
+
+/* MAIN */
+#main{margin-left:var(--sb-w);min-height:100vh;position:relative;z-index:1}
+.page{display:none;padding:40px 36px;animation:pgIn .3s var(--ease)}
+.page.active{display:block}
+@keyframes pgIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* BRAND */
+.brand{padding:36px 28px 28px;border-bottom:1px solid var(--bdr)}
+.brand-name{font-family:'Cormorant Garamond',serif;font-size:30px;font-style:italic;font-weight:500;background:linear-gradient(135deg,var(--gold),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
+.brand-ar{font-size:13px;color:var(--t4);margin-top:2px}
+.brand-tag{display:inline-block;margin-top:8px;font-size:10px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--gold2);background:var(--glow);padding:3px 10px;border-radius:99px;border:1px solid var(--gedge)}
+
+/* NAV */
+nav{flex:1;padding:20px 14px;display:flex;flex-direction:column;gap:3px;overflow-y:auto}
+.nav-sec{font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--t6);padding:12px 14px 6px}
+.nav-btn{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:var(--rmd);cursor:pointer;font-family:'Outfit',sans-serif;font-size:14px;font-weight:400;color:var(--t4);border:none;background:none;width:100%;text-align:left;transition:all .2s var(--ease);position:relative}
+.nav-btn:hover{color:var(--t1);background:rgba(226,185,106,.06)}
+.nav-btn.active{color:var(--gold);background:var(--glow);font-weight:500}
+.nav-btn.active::before{content:'';position:absolute;left:0;top:20%;bottom:20%;width:3px;border-radius:0 3px 3px 0;background:var(--gold)}
+.nav-icon{width:32px;height:32px;border-radius:var(--rsm);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;background:rgba(255,255,255,.04)}
+.nav-btn.active .nav-icon{background:var(--glow)}
+.sb-foot{padding:18px 22px;border-top:1px solid var(--bdr);font-size:11px;color:var(--t6);display:flex;align-items:center;gap:8px;flex-shrink:0}
+.pulse{width:7px;height:7px;border-radius:50%;background:var(--em);animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(46,204,142,.4)}70%{box-shadow:0 0 0 6px rgba(46,204,142,0)}100%{box-shadow:0 0 0 0 rgba(46,204,142,.4)}}
+
+/* CARDS */
+.card{background:var(--n800);border:1px solid var(--bdr);border-radius:var(--rxl);padding:26px;box-shadow:var(--sh-md);position:relative;overflow:hidden}
+.card::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(226,185,106,.2),transparent)}
+.hero-card{background:var(--n800);border:1px solid var(--bdr);border-radius:var(--rxl);padding:28px 26px;cursor:pointer;transition:all .25s var(--ease);position:relative;overflow:hidden}
+.hero-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:var(--rxl) var(--rxl) 0 0}
+.gold-card::before{background:linear-gradient(90deg,var(--gold2),var(--gold),var(--gold2))}
+.blue-card::before{background:linear-gradient(90deg,var(--sky),#6EB5FF)}
+.hero-card:hover{border-color:var(--bdr2);transform:translateY(-3px);box-shadow:var(--sh-lg),var(--sh-gold)}
+.corner-icon{position:absolute;bottom:18px;right:22px;font-size:64px;opacity:.04;pointer-events:none}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:99px;font-size:11px;font-weight:500;margin-bottom:16px}
+.gold-badge{background:var(--glow);color:var(--gold);border:1px solid var(--gedge)}
+.blue-badge{background:var(--sky-d);color:var(--sky);border:1px solid rgba(77,159,232,.2)}
+.hero-amount{font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:500;line-height:1;letter-spacing:-.5px;margin-bottom:8px}
+.hero-chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;padding-top:16px;border-top:1px solid var(--bdr)}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:99px;font-size:12px;background:rgba(255,255,255,.04);color:var(--t2);border:1px solid var(--bdr)}
+.chip strong{color:var(--gold)}
+.mini-card{background:var(--n800);border:1px solid var(--bdr);border-radius:var(--rlg);padding:18px 20px;transition:border-color .2s}
+.mini-card:hover{border-color:var(--bdr2)}
+.mini-label{font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--t6);margin-bottom:8px}
+.mini-val{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:500;line-height:1}
+
+/* GRIDS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+
+/* PROGRESS */
+.prog-track{background:rgba(255,255,255,.06);border-radius:99px;height:6px;overflow:hidden;margin-top:12px}
+.prog-fill{height:100%;border-radius:99px;transition:width .6s var(--spring)}
+.prog-fill.gold-fill{background:linear-gradient(90deg,var(--gold2),var(--gold))}
+.prog-fill.red-fill{background:linear-gradient(90deg,var(--rb),#F07F7F)}
+.prog-fill.moon-fill{background:linear-gradient(90deg,var(--moon),#C4B5FD)}
+
+/* INPUTS */
+.field{display:flex;flex-direction:column;gap:7px}
+.field label{font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--t4)}
+.inp-wrap{position:relative;display:flex;align-items:center}
+.inp-prefix{position:absolute;left:14px;font-size:12px;font-weight:600;color:var(--gold2);pointer-events:none;letter-spacing:.05em}
+input[type=text],input[type=number],input[type=date]{width:100%;background:var(--n900);border:1px solid var(--bdr);border-radius:var(--rmd);color:var(--t1);font-family:'Outfit',sans-serif;font-size:14px;padding:11px 14px;outline:none;transition:border-color .2s,box-shadow .2s;appearance:none;-webkit-appearance:none}
+input[type=date]{color-scheme:dark}
+input:focus{border-color:var(--gold2);box-shadow:0 0 0 3px rgba(200,154,66,.12)}
+input.has-prefix{padding-left:46px}
+input::placeholder{color:var(--t6)}
+input[type=number]::-webkit-inner-spin-button{opacity:.3}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:10px 20px;border-radius:var(--rmd);font-family:'Outfit',sans-serif;font-size:13px;font-weight:500;cursor:pointer;border:none;transition:all .2s var(--ease);white-space:nowrap}
+.btn-gold{background:linear-gradient(135deg,var(--gold2),var(--gold) 60%,var(--gold2));color:var(--n900);font-weight:600;box-shadow:0 2px 12px rgba(200,154,66,.25)}
+.btn-gold:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(200,154,66,.35);filter:brightness(1.05)}
+.btn-silver{background:linear-gradient(135deg,#7a7a7a,var(--silver) 60%,#7a7a7a);color:var(--n900);font-weight:600;box-shadow:0 2px 12px rgba(192,192,192,.2)}
+.btn-silver:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(192,192,192,.3);filter:brightness(1.05)}
+.btn-ghost{background:transparent;border:1px solid var(--bdr);color:var(--t2)}
+.btn-ghost:hover{border-color:var(--bdr2);color:var(--t1);background:var(--glow)}
+.btn-danger{background:var(--rb-d);color:var(--rb);border:1px solid transparent}
+.btn-danger:hover{border-color:var(--rb)}
+.btn-sm{padding:7px 14px;font-size:12px}
+.btn-icon{width:32px;height:32px;padding:0;border-radius:var(--rsm)}
+
+/* TABLE */
+.tbl-wrap{overflow-x:auto;border-radius:var(--rlg);border:1px solid var(--bdr)}
+table{width:100%;border-collapse:collapse;min-width:600px}
+thead th{padding:11px 14px;text-align:left;font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--t6);background:var(--n900);border-bottom:1px solid var(--bdr);white-space:nowrap}
+tbody td{padding:12px 14px;font-size:13px;border-bottom:1px solid rgba(226,185,106,.05);vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+tbody tr{background:var(--n800);transition:background .15s}
+tbody tr:hover{background:var(--n700)}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:600}
+.bg-green{background:var(--em-d);color:var(--em)}
+.bg-red{background:var(--rb-d);color:var(--rb)}
+.bg-gold{background:var(--glow);color:var(--gold);border:1px solid var(--gedge)}
+.bg-silver{background:var(--silver-glow);color:var(--silver);border:1px solid var(--silver-edge)}
+.bg-sky{background:var(--sky-d);color:var(--sky)}
+.bg-moon{background:var(--moon-d);color:var(--moon)}
+
+/* SECTION */
+.sec{margin-bottom:32px}
+.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px}
+.sec-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:500;color:var(--t1)}
+.rule{height:1px;background:linear-gradient(90deg,transparent,var(--gold2),transparent);margin:28px 0;opacity:.3}
+.pg-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:36px;flex-wrap:wrap;gap:16px}
+.pg-title{font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:500;line-height:1;letter-spacing:-.3px}
+.pg-sub{font-size:13px;color:var(--t4);margin-top:5px;font-weight:300}
+
+/* DATE STRIP */
+.date-strip{
+  display:flex;align-items:center;gap:0;
+  background:var(--n800);border:1px solid var(--bdr);
+  border-radius:var(--rmd);overflow:hidden;margin-bottom:28px;
+}
+.date-half{
+  flex:1;padding:12px 20px;display:flex;flex-direction:column;gap:2px;
+}
+.date-half:first-child{border-right:1px solid var(--bdr)}
+.date-type{font-size:9px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--t6);margin-bottom:4px}
+.date-val{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:500;color:var(--t1);line-height:1.2}
+.date-val-ar{font-size:15px;direction:rtl;text-align:right}
+
+/* SALARY BAND */
+.salary-band{background:linear-gradient(135deg,var(--n700),var(--n600));border:1px solid var(--bdr2);border-radius:var(--rxl);padding:28px 30px;box-shadow:var(--sh-md),var(--sh-gold);position:relative;overflow:hidden}
+.salary-band::before{content:'KD';position:absolute;right:30px;top:50%;transform:translateY(-50%);font-family:'Cormorant Garamond',serif;font-size:100px;color:var(--gold);opacity:.04;line-height:1;pointer-events:none}
+.salary-row{display:flex;align-items:center;gap:32px;flex-wrap:wrap}
+.salary-big-label{font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--gold2);margin-bottom:8px}
+.sal-inp-wrap{display:flex;align-items:center;background:var(--n900);border:1px solid var(--bdr2);border-radius:var(--rmd);overflow:hidden;width:220px}
+.sal-prefix{padding:0 14px;font-size:13px;font-weight:600;color:var(--gold);border-right:1px solid var(--bdr);align-self:stretch;display:flex;align-items:center}
+#dash-salary{border:none;outline:none;background:transparent;font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:500;color:var(--t1);padding:12px 14px;width:100%}
+.salary-stats{display:flex;gap:24px;flex-wrap:wrap;flex:1}
+.sal-stat{display:flex;flex-direction:column;gap:5px}
+.sal-stat-label{font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--t6)}
+.sal-stat-val{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:500;line-height:1}
+.div-v{width:1px;background:var(--bdr);align-self:stretch}
+
+/* WEALTH BANNER */
+.wealth-banner{background:linear-gradient(135deg,var(--n700),rgba(200,154,66,.08));border:1px solid var(--bdr2);border-radius:var(--rxl);padding:32px;box-shadow:var(--sh-lg),var(--sh-gold);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:24px;position:relative;overflow:hidden;margin-bottom:24px}
+.wealth-banner::after{content:'◈';position:absolute;right:32px;bottom:-10px;font-size:120px;color:var(--gold);opacity:.03;line-height:1}
+
+/* METAL LAYOUT (Gold & Silver) */
+.metal-layout{display:flex;flex-direction:column;gap:16px}
+.metal-top-bar{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end}
+.metal-price-block{flex:0 0 auto;min-width:180px}
+.metal-pills{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+.mpill{background:var(--n900);border:1px solid var(--bdr);border-radius:var(--rmd);padding:10px 16px;display:flex;flex-direction:column;gap:3px;min-width:110px}
+.mpill-label{font-size:10px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--t6)}
+.mpill-val{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;line-height:1}
+
+/* DETAIL ROW */
+.detail-row{background:var(--n900);border-top:1px solid var(--bdr);padding:16px 14px;display:none}
+.detail-row.open{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start}
+.gd-block{display:flex;flex-direction:column;gap:3px;min-width:100px}
+.gd-label{font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--t6)}
+.gd-val{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:500;color:var(--t2)}
+
+/* COMMIT ROWS */
+.commit-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(226,185,106,.05)}
+.commit-row:last-child{border-bottom:none}
+
+/* OTHER ASSETS ROWS */
+.other-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(226,185,106,.05)}
+.other-row:last-child{border-bottom:none}
+
+/* CAL TABS */
+.cal-tabs{display:flex;background:var(--n900);border:1px solid var(--bdr);border-radius:var(--rlg);overflow:hidden;margin-bottom:22px;width:fit-content}
+.cal-tab{padding:10px 22px;font-size:13px;font-weight:500;cursor:pointer;border:none;background:none;color:var(--t4);font-family:'Outfit',sans-serif;transition:all .2s;display:flex;align-items:center;gap:7px}
+.cal-tab.active{background:var(--glow);color:var(--gold)}
+.cal-tab:hover:not(.active){color:var(--t2);background:rgba(255,255,255,.03)}
+
+/* MONTH GRID */
+.month-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.mo-card{background:var(--n800);border:1px solid var(--bdr);border-radius:var(--rlg);padding:18px;cursor:pointer;transition:all .22s var(--ease);position:relative;overflow:hidden}
+.mo-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:transparent;transition:background .22s}
+.mo-card:hover::before{background:linear-gradient(90deg,var(--gold2),var(--gold))}
+.mo-card:hover{border-color:var(--bdr2);transform:translateY(-2px);box-shadow:var(--sh-md)}
+.mo-card.is-current{border-color:var(--gedge);background:linear-gradient(135deg,var(--n700),rgba(200,154,66,.06))}
+.mo-card.is-current::before{background:linear-gradient(90deg,var(--gold2),var(--gold))}
+.mo-card.hijri-card{border-color:rgba(167,139,250,.15)}
+.mo-card.hijri-card:hover::before{background:linear-gradient(90deg,var(--moon),#C4B5FD)}
+.mo-card.hijri-card:hover{border-color:rgba(167,139,250,.35)}
+.mo-card.is-ramadan{border-color:rgba(167,139,250,.4);background:linear-gradient(135deg,var(--n700),rgba(167,139,250,.07))}
+.mo-card.is-ramadan::before{background:linear-gradient(90deg,var(--moon),#C4B5FD)}
+.mo-label{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--t4);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+.mo-now{width:6px;height:6px;border-radius:50%;background:var(--gold)}
+.mo-ram-dot{width:6px;height:6px;border-radius:50%;background:var(--moon)}
+.mo-amount{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:500;color:var(--rb);line-height:1;margin-bottom:5px}
+.mo-rem{font-size:11px;font-weight:500}
+.mo-zakat-pill{margin-top:10px;padding:5px 10px;border-radius:99px;background:var(--moon-d);color:var(--moon);font-size:11px;font-weight:600;border:1px solid rgba(167,139,250,.25);display:inline-flex;align-items:center;gap:4px}
+
+/* MODAL */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(5,8,15,.88);backdrop-filter:blur(10px);z-index:700;align-items:center;justify-content:center;padding:20px}
+.modal-bg.open{display:flex}
+.modal-box{background:var(--n800);border:1px solid var(--bdr2);border-radius:var(--rxl);width:100%;max-width:680px;max-height:92vh;overflow-y:auto;box-shadow:0 30px 80px rgba(0,0,0,.7),var(--sh-gold);animation:modalPop .28s var(--spring)}
+@keyframes modalPop{from{opacity:0;transform:scale(.94) translateY(20px)}to{opacity:1;transform:none}}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:22px 26px 18px;border-bottom:1px solid var(--bdr)}
+.modal-head h3{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:500}
+.modal-close{width:34px;height:34px;border-radius:var(--rsm);background:var(--n700);border:1px solid var(--bdr);color:var(--t4);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.modal-close:hover{background:var(--rb-d);color:var(--rb);border-color:var(--rb)}
+.modal-body{padding:24px 26px}
+.fg{display:grid;gap:14px;margin-bottom:14px}
+.fg.c2{grid-template-columns:1fr 1fr}
+
+/* ZAKAT PANEL */
+.zakat-panel{background:linear-gradient(135deg,var(--n900),rgba(167,139,250,.06));border:1px solid rgba(167,139,250,.25);border-radius:var(--rlg);padding:18px 20px;margin-top:20px}
+.zakat-panel-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px}
+.zakat-panel-title h4{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--moon)}
+.zakat-note{font-size:12px;color:var(--t4);margin-top:8px;font-style:italic}
+.toggle-wrap{display:flex;align-items:center;gap:10px}
+.toggle-lbl{font-size:12px;color:var(--t4)}
+.toggle{position:relative;width:40px;height:22px;cursor:pointer}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;inset:0;background:var(--n600);border-radius:99px;transition:.3s;border:1px solid var(--bdr)}
+.toggle-slider::before{content:'';position:absolute;left:3px;top:50%;transform:translateY(-50%);width:16px;height:16px;border-radius:50%;background:var(--t6);transition:.3s}
+.toggle input:checked+.toggle-slider{background:var(--moon-d);border-color:var(--moon)}
+.toggle input:checked+.toggle-slider::before{background:var(--moon);transform:translate(18px,-50%)}
+
+/* YEAR VIEW */
+.yr-bar-row{display:flex;align-items:center;gap:12px;padding:5px 0}
+.yr-bar-mo{width:32px;font-size:11px;color:var(--t4);font-weight:500;flex-shrink:0}
+.yr-bar-track{flex:1;height:8px;background:var(--n900);border-radius:99px;overflow:hidden}
+.yr-bar-inner{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--rb),#F07F7F);transition:width .6s var(--spring)}
+.yr-bar-val{width:100px;text-align:right;font-size:12px;color:var(--t4);flex-shrink:0}
+.chart-container{position:relative;height:220px}
+
+/* EMPTY */
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:44px 20px;color:var(--t6);gap:10px}
+.empty-icon{font-size:38px;line-height:1}
+.empty-text{font-size:13px;text-align:center}
+
+/* TOAST */
+#toast{position:fixed;bottom:28px;right:28px;background:var(--n700);border:1px solid var(--bdr2);color:var(--t1);padding:13px 22px;border-radius:var(--rmd);font-size:13px;font-weight:500;z-index:9999;transform:translateY(80px);opacity:0;transition:all .3s var(--spring);box-shadow:var(--sh-lg)}
+#toast.show{transform:translateY(0);opacity:1}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--n400);border-radius:99px}
+::-webkit-scrollbar-thumb:hover{background:var(--gold3)}
+
+/* COLOR HELPERS */
+.c-gold{color:var(--gold)} .c-silver{color:var(--silver)} .c-green{color:var(--em)} .c-red{color:var(--rb)} .c-sky{color:var(--sky)} .c-moon{color:var(--moon)} .c-dim{color:var(--t4)}
+
+/* RESPONSIVE */
+@media(max-width:960px){
+  #mob-header{display:flex}
+  #main{margin-left:0;padding-top:58px}
+  .page{padding:22px 16px}
+  .g2,.g3,.g4{grid-template-columns:1fr 1fr}
+  .month-grid{grid-template-columns:repeat(3,1fr)}
+  .fg.c2{grid-template-columns:1fr}
+  .pg-title{font-size:30px}
+  .hero-amount{font-size:32px}
+  .salary-row{flex-direction:column;align-items:flex-start}
+  .sal-inp-wrap{width:100%}
+  .date-strip{flex-direction:column}
+  .date-half:first-child{border-right:none;border-bottom:1px solid var(--bdr)}
+}
+@media(max-width:600px){
+  .g2,.g3,.g4{grid-template-columns:1fr}
+  .month-grid{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+
+<!-- MOBILE HEADER -->
+<div id="mob-header">
+  <span class="mob-brand">Myzaan</span>
+  <button id="mob-toggle" onclick="toggleSidebar()">☰</button>
+</div>
+<div id="overlay" onclick="closeSidebar()"></div>
+
+<!-- SIDEBAR -->
+<aside id="sidebar">
+  <div class="brand">
+    <div class="brand-name">Myzaan</div>
+    <div class="brand-ar">ميزان · Balance</div>
+    <div class="brand-tag">Personal Finance · KWD</div>
+  </div>
+  <nav>
+    <div class="nav-sec">Overview</div>
+    <button class="nav-btn active" data-page="dashboard" onclick="showPage('dashboard')"><span class="nav-icon">⌂</span>Dashboard</button>
+    <div class="nav-sec">Finance</div>
+    <button class="nav-btn" data-page="wealth" onclick="showPage('wealth')"><span class="nav-icon">◈</span>My Wealth</button>
+    <button class="nav-btn" data-page="commitments" onclick="showPage('commitments')"><span class="nav-icon">◉</span>Commitments</button>
+    <button class="nav-btn" data-page="year" onclick="showPage('year')"><span class="nav-icon">◷</span>Year View</button>
+  </nav>
+  <div class="sb-foot"><div class="pulse"></div>Auto-saved</div>
+</aside>
+
+<!-- MAIN -->
+<div id="main">
+
+<!-- ═══ DASHBOARD ═══ -->
+<div id="page-dashboard" class="page active">
+  <div class="pg-header">
+    <div>
+      <div class="pg-title">Dashboard</div>
+      <div class="pg-sub">Your financial overview in Kuwait Dinar</div>
+    </div>
+  </div>
+
+  <!-- Dual Date Strip -->
+  <div class="date-strip">
+    <div class="date-half">
+      <div class="date-type">Gregorian · ميلادي</div>
+      <div class="date-val" id="date-greg">—</div>
+    </div>
+    <div class="date-half">
+      <div class="date-type">Hijri · هجري</div>
+      <div class="date-val date-val-ar" id="date-hijri">—</div>
+    </div>
+  </div>
+
+  <!-- Salary Band -->
+  <div class="sec">
+    <div class="salary-band">
+      <div class="salary-row">
+        <div>
+          <div class="salary-big-label">Monthly Salary</div>
+          <div class="sal-inp-wrap">
+            <span class="sal-prefix">KD</span>
+            <input type="number" id="dash-salary" placeholder="0.000" step="0.001" oninput="onSalaryChange(this.value)">
+          </div>
+        </div>
+        <div class="div-v"></div>
+        <div class="salary-stats">
+          <div class="sal-stat">
+            <div class="sal-stat-label">Expenses</div>
+            <div class="sal-stat-val c-red" id="dash-exp">KD 0.000</div>
+          </div>
+          <div class="div-v"></div>
+          <div class="sal-stat">
+            <div class="sal-stat-label">Remaining</div>
+            <div class="sal-stat-val c-green" id="dash-rem">KD 0.000</div>
+          </div>
+        </div>
+      </div>
+      <div class="prog-track">
+        <div class="prog-fill red-fill" id="dash-prog" style="width:0%"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--t6);margin-top:6px">
+        <span>Budget used</span><span id="dash-pct">0%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hero Cards -->
+  <div class="g2 sec">
+    <div class="hero-card gold-card" onclick="showPage('wealth')">
+      <div class="hero-badge gold-badge">◈ My Wealth</div>
+      <div class="hero-amount c-gold" id="dash-wealth">KD 0.000</div>
+      <div style="font-size:12px;color:var(--t4)">Total net assets</div>
+      <div class="hero-chips">
+        <span class="chip">Gold <strong id="d-gc">KD 0</strong></span>
+        <span class="chip">Silver <strong id="d-sc" style="color:var(--silver)">KD 0</strong></span>
+        <span class="chip">Cash <strong id="d-cc">KD 0</strong></span>
+      </div>
+      <div class="corner-icon">◈</div>
+    </div>
+    <div class="hero-card blue-card" onclick="showPage('commitments')">
+      <div class="hero-badge blue-badge">◉ Commitments</div>
+      <div class="hero-amount c-red" id="dash-commits">KD 0.000</div>
+      <div style="font-size:12px;color:var(--t4)">This month expenses</div>
+      <div class="hero-chips">
+        <span class="chip">Zakat <strong id="d-zc" style="color:var(--gold)">KD 0</strong></span>
+        <span class="chip">Ramadan <strong id="d-rc" style="color:var(--moon)">KD 0</strong></span>
+      </div>
+      <div class="corner-icon">◉</div>
+    </div>
+  </div>
+
+  <!-- Quick Stats -->
+  <div class="sec">
+    <div class="sec-head"><div class="sec-title">Quick Stats</div></div>
+    <div class="g4">
+      <div class="mini-card"><div class="mini-label">Gold Weight</div><div class="mini-val c-gold" id="qs-gw">0 g</div></div>
+      <div class="mini-card"><div class="mini-label">Silver Weight</div><div class="mini-val c-silver" id="qs-sw">0 g</div></div>
+      <div class="mini-card"><div class="mini-label">Zakat 2.5%</div><div class="mini-val c-gold" id="qs-zakat">KD 0.000</div></div>
+      <div class="mini-card"><div class="mini-label">Yearly Expenses</div><div class="mini-val c-red" id="qs-yr">KD 0.000</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ WEALTH ═══ -->
+<div id="page-wealth" class="page">
+  <div class="pg-header">
+    <div><div class="pg-title">My Wealth</div><div class="pg-sub">Gold · Silver · Cash · Assets · Zakat</div></div>
+  </div>
+
+  <!-- Total Banner -->
+  <div class="wealth-banner">
+    <div>
+      <div style="font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--gold2);margin-bottom:8px">Total Net Worth</div>
+      <div id="w-total" style="font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:500;color:var(--gold);line-height:1">KD 0.000</div>
+      <div style="display:flex;gap:14px;margin-top:12px;flex-wrap:wrap">
+        <span style="font-size:11px;color:var(--t4)">🟡 Gold <strong class="c-gold" id="wb-gold">0</strong></span>
+        <span style="font-size:11px;color:var(--t4)">⚪ Silver <strong class="c-silver" id="wb-silver">0</strong></span>
+        <span style="font-size:11px;color:var(--t4)">💵 Cash <strong class="c-green" id="wb-cash">0</strong></span>
+        <span style="font-size:11px;color:var(--t4)">🏠 Other <strong style="color:var(--sky)" id="wb-other">0</strong></span>
+      </div>
+    </div>
+    <div style="text-align:right">
+      <div style="font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--t6);margin-bottom:6px">Zakat Obligation 2.5%</div>
+      <div id="w-zakat" style="font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--gold)">KD 0.000</div>
+      <div style="font-size:11px;color:var(--t6);margin-top:4px">When Nisab is met</div>
+    </div>
+  </div>
+
+  <!-- GOLD -->
+  <div class="sec">
+    <div class="sec-head">
+      <div class="sec-title">🟡 Gold Holdings</div>
+      <button class="btn btn-gold btn-sm" onclick="openMetalModal('gold')">+ Add Gold</button>
+    </div>
+    <div class="metal-layout">
+      <div class="metal-top-bar">
+        <div class="metal-price-block">
+          <div class="field">
+            <label>Gold Market Price / gram</label>
+            <div class="inp-wrap"><span class="inp-prefix">KD</span>
+              <input type="number" class="has-prefix" id="gold-price-input" placeholder="0.000" step="0.001" oninput="onMetalPriceChange('gold',this.value)">
+            </div>
+          </div>
+        </div>
+        <div class="metal-pills">
+          <div class="mpill"><div class="mpill-label">Weight</div><div class="mpill-val c-gold" id="gp-wt">0 g</div></div>
+          <div class="mpill"><div class="mpill-label">Purchase</div><div class="mpill-val c-dim" id="gp-pur">KD 0</div></div>
+          <div class="mpill"><div class="mpill-label">Current</div><div class="mpill-val c-green" id="gp-cur">KD 0</div></div>
+          <div class="mpill"><div class="mpill-label">P &amp; L</div><div class="mpill-val" id="gp-pl">KD 0</div></div>
+        </div>
+      </div>
+      <div class="tbl-wrap" id="gold-tbl-wrap">
+        <div id="gold-empty" class="empty-state"><div class="empty-icon">🥇</div><div class="empty-text">No gold entries yet.<br>Click "+ Add Gold" to begin.</div></div>
+        <table id="gold-table" style="display:none">
+          <thead><tr><th>Label</th><th>Bars</th><th>g/Bar</th><th>Total g</th><th>Buy/g</th><th>Purchase</th><th>Current</th><th>P&amp;L</th><th>P&amp;L %</th><th>Held</th><th></th></tr></thead>
+          <tbody id="gold-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="rule"></div>
+
+  <!-- SILVER -->
+  <div class="sec">
+    <div class="sec-head">
+      <div class="sec-title">⚪ Silver Holdings</div>
+      <button class="btn btn-silver btn-sm" onclick="openMetalModal('silver')">+ Add Silver</button>
+    </div>
+    <div class="metal-layout">
+      <div class="metal-top-bar">
+        <div class="metal-price-block">
+          <div class="field">
+            <label>Silver Market Price / gram</label>
+            <div class="inp-wrap"><span class="inp-prefix">KD</span>
+              <input type="number" class="has-prefix" id="silver-price-input" placeholder="0.000" step="0.001" oninput="onMetalPriceChange('silver',this.value)">
+            </div>
+          </div>
+        </div>
+        <div class="metal-pills">
+          <div class="mpill"><div class="mpill-label">Weight</div><div class="mpill-val c-silver" id="sp-wt">0 g</div></div>
+          <div class="mpill"><div class="mpill-label">Purchase</div><div class="mpill-val c-dim" id="sp-pur">KD 0</div></div>
+          <div class="mpill"><div class="mpill-label">Current</div><div class="mpill-val c-green" id="sp-cur">KD 0</div></div>
+          <div class="mpill"><div class="mpill-label">P &amp; L</div><div class="mpill-val" id="sp-pl">KD 0</div></div>
+        </div>
+      </div>
+      <div class="tbl-wrap" id="silver-tbl-wrap">
+        <div id="silver-empty" class="empty-state"><div class="empty-icon">🥈</div><div class="empty-text">No silver entries yet.<br>Click "+ Add Silver" to begin.</div></div>
+        <table id="silver-table" style="display:none">
+          <thead><tr><th>Label</th><th>Bars</th><th>g/Bar</th><th>Total g</th><th>Buy/g</th><th>Purchase</th><th>Current</th><th>P&amp;L</th><th>P&amp;L %</th><th>Held</th><th></th></tr></thead>
+          <tbody id="silver-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="rule"></div>
+
+  <!-- CASH -->
+  <div class="sec">
+    <div class="sec-head"><div class="sec-title">💵 Cash Holdings</div></div>
+    <div class="card" style="max-width:400px">
+      <div style="font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--t6);margin-bottom:12px">Total Cash (KWD)</div>
+      <div class="inp-wrap">
+        <span class="inp-prefix">KD</span>
+        <input type="number" class="has-prefix" id="cash-input" placeholder="0.000" step="0.001"
+          style="font-family:'Cormorant Garamond',serif;font-size:28px;padding:16px 14px 16px 46px"
+          oninput="onCashChange(this.value)">
+      </div>
+    </div>
+  </div>
+
+  <div class="rule"></div>
+
+  <!-- OTHER ASSETS -->
+  <div class="sec">
+    <div class="sec-head">
+      <div class="sec-title">🏠 Other Assets</div>
+      <button class="btn btn-ghost btn-sm" onclick="addOther()">+ Add Asset</button>
+    </div>
+    <div class="card">
+      <div id="other-list"></div>
+      <div id="other-total-row" style="display:none;margin-top:14px;padding-top:14px;border-top:1px solid var(--bdr);display:none;align-items:center;justify-content:space-between">
+        <span style="font-size:12px;color:var(--t4)">Total Other Assets</span>
+        <span id="other-total" style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--sky)">KD 0.000</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ COMMITMENTS ═══ -->
+<div id="page-commitments" class="page">
+  <div class="pg-header">
+    <div><div class="pg-title">Commitments</div><div class="pg-sub">Monthly expenses · Gregorian &amp; Hijri</div></div>
+  </div>
+  <div class="cal-tabs">
+    <button class="cal-tab active" id="tab-greg" onclick="switchCal('greg')">🗓 Gregorian</button>
+    <button class="cal-tab" id="tab-hijri" onclick="switchCal('hijri')">🌙 Hijri — هجري</button>
+  </div>
+  <div id="greg-grid" class="month-grid"></div>
+  <div id="hijri-grid" class="month-grid" style="display:none"></div>
+</div>
+
+<!-- ═══ YEAR VIEW ═══ -->
+<div id="page-year" class="page">
+  <div class="pg-header">
+    <div><div class="pg-title">Year View <span id="yr-label" style="color:var(--t4)"></span></div><div class="pg-sub">Annual expense breakdown</div></div>
+  </div>
+  <div class="g3 sec">
+    <div class="mini-card"><div class="mini-label">Total Yearly Expenses</div><div class="mini-val c-red" id="yr-total">KD 0.000</div></div>
+    <div class="mini-card"><div class="mini-label">Monthly Average</div><div class="mini-val c-gold" id="yr-avg">KD 0.000</div></div>
+    <div class="mini-card"><div class="mini-label">Total Remaining</div><div class="mini-val c-green" id="yr-rem">KD 0.000</div></div>
+  </div>
+  <div class="g2 sec">
+    <div class="card"><div style="font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--t6);margin-bottom:16px">Expenses vs Salary</div><div class="chart-container"><canvas id="yr-chart"></canvas></div></div>
+    <div class="card"><div style="font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--t6);margin-bottom:16px">Monthly Bars</div><div id="yr-bars" style="display:flex;flex-direction:column;gap:8px"></div></div>
+  </div>
+  <div class="sec">
+    <div class="card">
+      <div style="font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--t6);margin-bottom:14px">Monthly Detail</div>
+      <div class="tbl-wrap">
+        <table><thead><tr><th>Month</th><th>Salary</th><th>Expenses</th><th>Remaining</th><th>Used %</th></tr></thead>
+        <tbody id="yr-tbody"></tbody></table>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<!-- ═══ METAL MODAL (Gold & Silver shared) ═══ -->
+<div id="metal-modal" class="modal-bg">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3 id="metal-modal-title">Add Entry</h3>
+      <button class="modal-close" onclick="closeMetalModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="fg c2">
+        <div class="field"><label>Label / Name</label><input type="text" id="m-label" placeholder="e.g. 24K Bar"></div>
+        <div class="field"><label>Number of Bars / Pieces</label><input type="number" id="m-bars" placeholder="1" min="1" step="1"></div>
+      </div>
+      <div class="fg c2">
+        <div class="field"><label>Weight per Bar (grams)</label><input type="number" id="m-weight" placeholder="e.g. 31.1" min="0.01" step="0.01"></div>
+        <div class="field">
+          <label>Purchase Price / gram (KD)</label>
+          <div class="inp-wrap"><span class="inp-prefix">KD</span><input type="number" class="has-prefix" id="m-buy" placeholder="0.000" min="0" step="0.001"></div>
+        </div>
+      </div>
+      <div class="fg c2" style="margin-bottom:8px">
+        <div class="field"><label>Purchase Date</label><input type="date" id="m-date"></div>
+        <div class="field"><label>Notes (optional)</label><input type="text" id="m-notes" placeholder="e.g. Kuwait Gold Souk"></div>
+      </div>
+      <div style="background:var(--glow);border:1px solid var(--gedge);border-radius:var(--rmd);padding:11px 14px;font-size:12px;color:var(--gold);margin-bottom:18px">
+        📅 Purchase date calculates years held, annual return &amp; daily P&amp;L automatically.
+      </div>
+      <div style="display:flex;gap:10px;justify-content:flex-end">
+        <button class="btn btn-ghost" onclick="closeMetalModal()">Cancel</button>
+        <button class="btn btn-gold" id="metal-save-btn" onclick="saveMetalEntry()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MONTH MODAL ═══ -->
+<div id="month-modal" class="modal-bg">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3 id="mm-title">Month</h3>
+      <button class="modal-close" onclick="closeMonthModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="display:flex;gap:20px;align-items:flex-end;flex-wrap:wrap;margin-bottom:22px">
+        <div class="field" style="flex:1;min-width:160px">
+          <label>Salary (KD)</label>
+          <div class="inp-wrap"><span class="inp-prefix">KD</span>
+            <input type="number" class="has-prefix" id="mm-salary" placeholder="0.000" step="0.001" oninput="calcMM()">
+          </div>
+        </div>
+        <div style="display:flex;gap:20px;flex-wrap:wrap">
+          <div><div style="font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--t6);margin-bottom:5px">Expenses</div><div id="mm-total" style="font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--rb)">KD 0.000</div></div>
+          <div><div style="font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--t6);margin-bottom:5px">Remaining</div><div id="mm-rem" style="font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--em)">KD 0.000</div></div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <div style="font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--t6)">Commitments</div>
+        <button class="btn btn-ghost btn-sm" onclick="addCommitRow()">+ Add</button>
+      </div>
+      <div id="commit-list" style="max-height:260px;overflow-y:auto"></div>
+      <div class="prog-track" style="margin-top:14px"><div class="prog-fill red-fill" id="mm-prog" style="width:0%"></div></div>
+
+      <!-- Zakat Panel (Hijri only) -->
+      <div class="zakat-panel" id="zakat-panel" style="display:none">
+        <div class="zakat-panel-title">
+          <h4>🌙 Zakat al-Fitr — زكاة الفطر</h4>
+          <div class="toggle-wrap">
+            <span class="toggle-lbl" id="ram-lbl">Ramadan Month</span>
+            <label class="toggle"><input type="checkbox" id="mm-is-ramadan" onchange="onRamadanToggle()"><span class="toggle-slider"></span></label>
+          </div>
+        </div>
+        <div id="zakat-inputs" style="display:none">
+          <div class="fg c2" style="margin-bottom:0">
+            <div class="field"><label>Persons</label><input type="number" id="zakat-persons" placeholder="4" min="1" step="1" oninput="calcZakat()"></div>
+            <div class="field"><label>Per Person (KD)</label><div class="inp-wrap"><span class="inp-prefix">KD</span><input type="number" class="has-prefix" id="zakat-pp" placeholder="2.000" step="0.001" oninput="calcZakat()"></div></div>
+          </div>
+          <div style="margin-top:14px;display:flex;align-items:center;justify-content:space-between">
+            <span style="font-size:12px;color:var(--t4)">Total Zakat al-Fitr</span>
+            <span id="zakat-total" style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--moon)">KD 0.000</span>
+          </div>
+          <p class="zakat-note">Due at end of Ramadan for yourself and each dependent.</p>
+          <div style="margin-top:12px;display:flex;align-items:center;gap:12px">
+            <label class="toggle"><input type="checkbox" id="zakat-paid" onchange="onZakatPaidChange()"><span class="toggle-slider"></span></label>
+            <span style="font-size:13px;color:var(--t2)" id="zakat-paid-lbl">Mark as Paid</span>
+          </div>
+        </div>
+        <div id="zakat-off-msg" style="font-size:12px;color:var(--t6);font-style:italic">Toggle to mark this month as Ramadan.</div>
+      </div>
+
+      <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:22px">
+        <button class="btn btn-ghost" onclick="closeMonthModal()">Close</button>
+        <button class="btn btn-gold" onclick="saveMonthData()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ═══════════════════════════════════════════════
+   CONSTANTS
+═══════════════════════════════════════════════ */
+const GREG=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const HIJRI_MONTHS=[
+  {ar:'محرم',en:'Muharram'},{ar:'صفر',en:'Safar'},{ar:'ربيع الأول',en:'Rabi al-Awwal'},
+  {ar:'ربيع الثاني',en:'Rabi al-Thani'},{ar:'جمادى الأولى',en:'Jumada al-Ula'},{ar:'جمادى الآخرة',en:'Jumada al-Akhira'},
+  {ar:'رجب',en:'Rajab'},{ar:'شعبان',en:'Shaban'},{ar:'رمضان',en:'Ramadan'},
+  {ar:'شوال',en:'Shawwal'},{ar:'ذو القعدة',en:'Dhu al-Qadah'},{ar:'ذو الحجة',en:'Dhu al-Hijjah'}
+];
+const RAMADAN_IDX=8;
+
+/* ═══════════════════════════════════════════════
+   HIJRI CALENDAR  (Umm al-Qura algorithm)
+═══════════════════════════════════════════════ */
+function gregorianToHijri(gYear,gMonth,gDay){
+  // Standard civil algorithm (accurate ±1 day vs Umm al-Qura)
+  const jd=Math.floor((1461*(gYear+4800+Math.floor((gMonth-14)/12)))/4)
+           +Math.floor((367*(gMonth-2-12*Math.floor((gMonth-14)/12)))/12)
+           -Math.floor((3*Math.floor((gYear+4900+Math.floor((gMonth-14)/12))/100))/4)
+           +gDay-32075;
+  let l=jd-1948440+10632;
+  const n=Math.floor((l-1)/10631);
+  l=l-10631*n+354;
+  const j=(Math.floor((10985-l)/5316))*(Math.floor((50*l)/17719))
+          +(Math.floor(l/5670))*(Math.floor((43*l)/15238));
+  l=l-(Math.floor((30-j)/15))*(Math.floor((17719*j)/50))
+      -(Math.floor(j/16))*(Math.floor((15238*j)/43))+29;
+  const hMonth=Math.floor((24*l)/709);
+  const hDay=l-Math.floor((709*hMonth)/24);
+  const hYear=30*n+j-30;
+  return{year:hYear,month:hMonth,day:hDay};
+}
+
+function getHijriStr(date){
+  const h=gregorianToHijri(date.getFullYear(),date.getMonth()+1,date.getDate());
+  const mName=HIJRI_MONTHS[h.month-1];
+  return `${h.day} ${mName?mName.en:''} ${h.year}  ·  ${h.day} ${mName?mName.ar:''} ${h.year}`;
+}
+
+function getCurrentHijri(){
+  const d=new Date();
+  const h=gregorianToHijri(d.getFullYear(),d.getMonth()+1,d.getDate());
+  return{...h,monthName:HIJRI_MONTHS[h.month-1]};
+}
+
+/* ═══════════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════════ */
+let ST={
+  salary:0,
+  goldPrice:0, goldEntries:[],
+  silverPrice:0, silverEntries:[],
+  cash:0,
+  otherAssets:[],
+  months:{}, hijriMonths:{},
+  nMetal:1, nOther:100, nCommit:500
+};
+let openMonthIdx=null, openCalType='greg', activeCal='greg';
+let yrChart=null;
+let currentMetalType='gold'; // which metal modal is open
+
+/* ═══════════════════════════════════════════════
+   STORAGE
+═══════════════════════════════════════════════ */
+function loadST(){
+  try{
+    const s=localStorage.getItem('myzaan_v5');
+    if(s){
+      const parsed=JSON.parse(s);
+      ST=Object.assign({},ST,parsed);
+    }
+  }catch(e){console.warn('Load error',e)}
+
+  // ensure month structures
+  for(let i=0;i<12;i++){
+    if(!ST.months[i]){
+      ST.months[i]={
+        salary:ST.salary||0,
+        commits:['Rent','Gas','Charity','Debt'].map((n,j)=>({id:i*50+j,name:n,amount:0}))
+      };
+    }
+    if(!ST.hijriMonths[i]){
+      ST.hijriMonths[i]={
+        salary:ST.salary||0,
+        commits:['Rent','Gas','Charity','Debt'].map((n,j)=>({id:1000+i*50+j,name:n,amount:0})),
+        isRamadan:(i===RAMADAN_IDX), zakatPersons:4, zakatPerPerson:2, zakatPaid:false
+      };
+    }
+    // back-fill missing fields
+    const hm=ST.hijriMonths[i];
+    if(hm.isRamadan===undefined) hm.isRamadan=(i===RAMADAN_IDX);
+    if(!hm.zakatPersons) hm.zakatPersons=4;
+    if(!hm.zakatPerPerson) hm.zakatPerPerson=2;
+    if(hm.zakatPaid===undefined) hm.zakatPaid=false;
+  }
+
+  // ensure arrays
+  if(!Array.isArray(ST.goldEntries))   ST.goldEntries=[];
+  if(!Array.isArray(ST.silverEntries)) ST.silverEntries=[];
+  if(!Array.isArray(ST.otherAssets))   ST.otherAssets=[];
+}
+
+function saveST(){
+  try{localStorage.setItem('myzaan_v5',JSON.stringify(ST))}
+  catch(e){console.warn('Save error',e)}
+}
+
+/* ═══════════════════════════════════════════════
+   FORMAT
+═══════════════════════════════════════════════ */
+function fmtKD(n,dec=3){
+  if(isNaN(n)||n==null) n=0;
+  return 'KD '+Math.abs(n).toLocaleString('en-KW',{minimumFractionDigits:dec,maximumFractionDigits:dec});
+}
+function fmtSign(n,dec=3){
+  return (n>=0?'+':'−')+fmtKD(Math.abs(n),dec);
+}
+function fmtPct(n){
+  return (n>=0?'+':'')+n.toFixed(2)+'%';
+}
+function pct(a,b){return b>0?Math.min(100,(a/b)*100):0}
+
+/* Date helpers */
+const NOW=()=>new Date();
+function daysBetween(ds){
+  if(!ds) return 0;
+  return Math.max(0,Math.floor((NOW()-new Date(ds))/(864e5)));
+}
+function yearsBetween(ds){return daysBetween(ds)/365.25}
+function fmtHeld(ds){
+  if(!ds) return '—';
+  const d=daysBetween(ds);
+  if(d<=0) return 'Today';
+  const y=Math.floor(d/365),m=Math.floor((d%365)/30),r=d%30;
+  const p=[];
+  if(y) p.push(y+'y');
+  if(m) p.push(m+'m');
+  if(!y&&r) p.push(r+'d');
+  return p.join(' ')||'<1d';
+}
+function fmtDateStr(ds){
+  if(!ds) return '—';
+  return new Date(ds).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+}
+function todayISO(){
+  return NOW().toISOString().slice(0,10);
+}
+
+/* ═══════════════════════════════════════════════
+   DUAL DATE DISPLAY
+═══════════════════════════════════════════════ */
+function renderDates(){
+  const now=NOW();
+  // Gregorian
+  const gStr=now.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  document.getElementById('date-greg').textContent=gStr;
+
+  // Hijri
+  const h=gregorianToHijri(now.getFullYear(),now.getMonth()+1,now.getDate());
+  const hm=HIJRI_MONTHS[h.month-1];
+  const hStr=`${h.day} ${hm?hm.en:''} ${h.year}  ·  ${h.day} ${hm?hm.ar:''} ${h.year}`;
+  document.getElementById('date-hijri').textContent=hStr;
+}
+
+/* ═══════════════════════════════════════════════
+   NAVIGATION
+═══════════════════════════════════════════════ */
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  const btn=document.querySelector('[data-page="'+id+'"]');
+  if(btn) btn.classList.add('active');
+  closeSidebar();
+  if(id==='dashboard')   renderDashboard();
+  if(id==='wealth')      renderWealth();
+  if(id==='commitments') renderMonthGrid();
+  if(id==='year')        renderYear();
+}
+
+function toggleSidebar(){
+  const sb=document.getElementById('sidebar');
+  const ov=document.getElementById('overlay');
+  const open=sb.classList.contains('open');
+  sb.classList.toggle('open',!open);
+  ov.classList.toggle('open',!open);
+  document.getElementById('mob-toggle').textContent=open?'☰':'✕';
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+  document.getElementById('mob-toggle').textContent='☰';
+}
+
+/* ═══════════════════════════════════════════════
+   CALCULATIONS
+═══════════════════════════════════════════════ */
+function metalTotals(type){
+  const entries=type==='gold'?ST.goldEntries:ST.silverEntries;
+  const price=type==='gold'?ST.goldPrice:ST.silverPrice;
+  let wt=0,pur=0,cur=0;
+  entries.forEach(e=>{
+    const w=(e.bars||0)*(e.weight||0);
+    wt+=w; pur+=w*(e.buy||0); cur+=w*price;
+  });
+  return{wt,pur,cur,pl:cur-pur,plPct:pur>0?((cur-pur)/pur*100):0};
+}
+
+function otherTotal(){
+  return ST.otherAssets.reduce((s,a)=>s+(parseFloat(a.value)||0),0);
+}
+
+function totalWealth(){
+  const g=metalTotals('gold');
+  const s=metalTotals('silver');
+  return g.cur+s.cur+(ST.cash||0)+otherTotal();
+}
+
+function zakatAmount(){return totalWealth()*0.025}
+
+function monthExp(i,cal='greg'){
+  const src=cal==='greg'?ST.months:ST.hijriMonths;
+  const m=src[i]; if(!m) return 0;
+  return (m.commits||[]).reduce((s,c)=>s+(parseFloat(c.amount)||0),0);
+}
+
+function curMoIdx(){return NOW().getMonth()}
+function curSalary(){return ST.months[curMoIdx()]?.salary||ST.salary||0}
+
+function totalRamadanZakat(){
+  let t=0;
+  for(let i=0;i<12;i++){
+    const hm=ST.hijriMonths[i];
+    if(hm?.isRamadan) t+=(hm.zakatPersons||0)*(hm.zakatPerPerson||0);
+  }
+  return t;
+}
+
+/* ═══════════════════════════════════════════════
+   DASHBOARD
+═══════════════════════════════════════════════ */
+function renderDashboard(){
+  renderDates();
+
+  const sal=curSalary(),exp=monthExp(curMoIdx()),rem=sal-exp,p=pct(exp,sal);
+
+  if(!document.getElementById('dash-salary').matches(':focus'))
+    document.getElementById('dash-salary').value=sal||'';
+
+  document.getElementById('dash-exp').textContent=fmtKD(exp);
+  const remEl=document.getElementById('dash-rem');
+  remEl.textContent=fmtKD(Math.abs(rem));
+  remEl.style.color=rem<0?'var(--rb)':'var(--em)';
+  document.getElementById('dash-prog').style.width=p+'%';
+  document.getElementById('dash-pct').textContent=Math.round(p)+'%';
+
+  const w=totalWealth();
+  const g=metalTotals('gold');
+  const sv=metalTotals('silver');
+  const rz=totalRamadanZakat();
+  const yearExp=Array.from({length:12},(_,i)=>monthExp(i)).reduce((a,b)=>a+b,0);
+
+  document.getElementById('dash-wealth').textContent=fmtKD(w);
+  document.getElementById('d-gc').textContent=fmtKD(g.cur,2);
+  document.getElementById('d-sc').textContent=fmtKD(sv.cur,2);
+  document.getElementById('d-cc').textContent=fmtKD(ST.cash||0,2);
+  document.getElementById('dash-commits').textContent=fmtKD(exp);
+  document.getElementById('d-zc').textContent=fmtKD(zakatAmount());
+  document.getElementById('d-rc').textContent=fmtKD(rz);
+
+  document.getElementById('qs-gw').textContent=g.wt.toFixed(3)+' g';
+  document.getElementById('qs-sw').textContent=sv.wt.toFixed(3)+' g';
+  document.getElementById('qs-zakat').textContent=fmtKD(zakatAmount());
+  document.getElementById('qs-yr').textContent=fmtKD(yearExp);
+}
+
+function onSalaryChange(v){
+  ST.salary=parseFloat(v)||0;
+  if(ST.months[curMoIdx()]) ST.months[curMoIdx()].salary=ST.salary;
+  saveST(); renderDashboard();
+}
+
+/* ═══════════════════════════════════════════════
+   WEALTH PAGE
+═══════════════════════════════════════════════ */
+function renderWealth(){
+  // Gold price input
+  const gpi=document.getElementById('gold-price-input');
+  if(!gpi.matches(':focus')) gpi.value=ST.goldPrice||'';
+
+  // Silver price input
+  const spi=document.getElementById('silver-price-input');
+  if(!spi.matches(':focus')) spi.value=ST.silverPrice||'';
+
+  // Cash
+  const ci=document.getElementById('cash-input');
+  if(!ci.matches(':focus')) ci.value=ST.cash||'';
+
+  renderMetalTable('gold');
+  renderMetalTable('silver');
+  renderOther();
+  updateWealthBanner();
+}
+
+function renderMetalTable(type){
+  const entries=type==='gold'?ST.goldEntries:ST.silverEntries;
+  const price=type==='gold'?ST.goldPrice:ST.silverPrice;
+  const table=document.getElementById(type+'-table');
+  const empty=document.getElementById(type+'-empty');
+  const tbody=document.getElementById(type+'-tbody');
+  const t=metalTotals(type);
+
+  // Summary pills
+  document.getElementById((type==='gold'?'g':'s')+'p-wt').textContent=t.wt.toFixed(3)+' g';
+  document.getElementById((type==='gold'?'g':'s')+'p-pur').textContent=fmtKD(t.pur,2);
+  document.getElementById((type==='gold'?'g':'s')+'p-cur').textContent=fmtKD(t.cur,2);
+  const plEl=document.getElementById((type==='gold'?'g':'s')+'p-pl');
+  plEl.textContent=fmtSign(t.pl,2);
+  plEl.style.color=t.pl>=0?'var(--em)':'var(--rb)';
+
+  if(entries.length===0){
+    table.style.display='none';
+    empty.style.display='flex';
+  } else {
+    table.style.display='';
+    empty.style.display='none';
+
+    tbody.innerHTML=entries.map(e=>{
+      const w=(e.bars||0)*(e.weight||0);
+      const pur=w*(e.buy||0), cur=w*price, pl=cur-pur;
+      const plPct=pur>0?((pl/pur)*100):0;
+      const days=daysBetween(e.date);
+      const yrs=days/365.25;
+      const annRate=yrs>0&&pur>0?((pl/pur/yrs)*100):0;
+      const dailyPl=days>0?pl/days:0;
+      const held=fmtHeld(e.date);
+      const mid=type+e.id;
+
+      return `<tr style="cursor:pointer" onclick="toggleDetail('${mid}')">
+        <td><strong style="color:var(--${type==='gold'?'gold':'silver'})">${esc(e.label||type)}</strong>${e.notes?'<div style="font-size:11px;color:var(--t6);margin-top:2px">'+esc(e.notes)+'</div>':''}</td>
+        <td>${e.bars}</td>
+        <td>${(e.weight||0).toFixed(2)} g</td>
+        <td>${w.toFixed(3)} g</td>
+        <td>${fmtKD(e.buy||0)}</td>
+        <td>${fmtKD(pur)}</td>
+        <td>${fmtKD(cur)}</td>
+        <td><span class="badge ${pl>=0?'bg-green':'bg-red'}">${fmtSign(pl,2)}</span></td>
+        <td><span class="badge ${plPct>=0?'bg-green':'bg-red'}">${fmtPct(plPct)}</span></td>
+        <td><span class="badge bg-gold">${held}</span></td>
+        <td><button class="btn btn-danger btn-icon" onclick="event.stopPropagation();deleteMetal('${type}',${e.id})">✕</button></td>
+      </tr>
+      <tr><td colspan="11" style="padding:0">
+        <div class="detail-row" id="dr-${mid}">
+          <div class="gd-block"><div class="gd-label">Bought</div><div class="gd-val">${fmtDateStr(e.date)}</div></div>
+          <div class="gd-block"><div class="gd-label">Today</div><div class="gd-val">${fmtDateStr(todayISO())}</div></div>
+          <div class="gd-block"><div class="gd-label">Days Held</div><div class="gd-val">${days>0?days.toLocaleString()+'d':'—'}</div></div>
+          <div class="gd-block"><div class="gd-label">Years Held</div><div class="gd-val c-gold">${yrs>0?yrs.toFixed(2)+'y':'—'}</div></div>
+          <div class="gd-block"><div class="gd-label">Annual Return</div><div class="gd-val ${annRate>=0?'c-green':'c-red'}">${yrs>0?fmtPct(annRate):'—'}</div></div>
+          <div class="gd-block"><div class="gd-label">Daily P&amp;L</div><div class="gd-val ${dailyPl>=0?'c-green':'c-red'}">${days>0?fmtSign(dailyPl,3):'—'}</div></div>
+          <div class="gd-block"><div class="gd-label">Total P&amp;L</div><div class="gd-val ${pl>=0?'c-green':'c-red'}">${fmtSign(pl)}</div></div>
+          <div class="gd-block"><div class="gd-label">Return %</div><div class="gd-val ${plPct>=0?'c-green':'c-red'}">${fmtPct(plPct)}</div></div>
+        </div>
+      </td></tr>`;
+    }).join('');
+  }
+}
+
+function toggleDetail(mid){
+  const el=document.getElementById('dr-'+mid);
+  if(el) el.classList.toggle('open');
+}
+
+function updateWealthBanner(){
+  const g=metalTotals('gold');
+  const sv=metalTotals('silver');
+  const ot=otherTotal();
+  const w=g.cur+sv.cur+(ST.cash||0)+ot;
+  document.getElementById('w-total').textContent=fmtKD(w);
+  document.getElementById('w-zakat').textContent=fmtKD(w*0.025);
+  document.getElementById('wb-gold').textContent=fmtKD(g.cur,2);
+  document.getElementById('wb-silver').textContent=fmtKD(sv.cur,2);
+  document.getElementById('wb-cash').textContent=fmtKD(ST.cash||0,2);
+  document.getElementById('wb-other').textContent=fmtKD(ot,2);
+}
+
+/* ─── Metal Price ─── */
+function onMetalPriceChange(type,v){
+  if(type==='gold') ST.goldPrice=parseFloat(v)||0;
+  else ST.silverPrice=parseFloat(v)||0;
+  saveST();
+  renderMetalTable(type);
+  updateWealthBanner();
+  renderDashboard();
+}
+
+/* ─── Metal Modal ─── */
+function openMetalModal(type){
+  currentMetalType=type;
+  const isGold=type==='gold';
+  document.getElementById('metal-modal-title').textContent=(isGold?'🥇 Add Gold Entry':'🥈 Add Silver Entry');
+  document.getElementById('metal-save-btn').className='btn '+(isGold?'btn-gold':'btn-silver');
+  ['m-label','m-bars','m-weight','m-buy','m-notes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('m-date').value=todayISO();
+  document.getElementById('metal-modal').classList.add('open');
+}
+function closeMetalModal(){
+  document.getElementById('metal-modal').classList.remove('open');
+}
+function saveMetalEntry(){
+  const label=document.getElementById('m-label').value.trim()||currentMetalType;
+  const bars=parseFloat(document.getElementById('m-bars').value)||0;
+  const weight=parseFloat(document.getElementById('m-weight').value)||0;
+  const buy=parseFloat(document.getElementById('m-buy').value)||0;
+  const date=document.getElementById('m-date').value||todayISO();
+  const notes=document.getElementById('m-notes').value.trim();
+
+  if(bars<=0||weight<=0){showToast('⚠ Enter bars and weight');return}
+
+  const entry={id:ST.nMetal++, label, bars, weight, buy, date, notes};
+  if(currentMetalType==='gold') ST.goldEntries.push(entry);
+  else ST.silverEntries.push(entry);
+
+  saveST();
+  closeMetalModal();
+  renderWealth();
+  renderDashboard();
+  showToast('✓ '+label+' saved');
+}
+function deleteMetal(type,id){
+  if(type==='gold') ST.goldEntries=ST.goldEntries.filter(e=>e.id!==id);
+  else ST.silverEntries=ST.silverEntries.filter(e=>e.id!==id);
+  saveST();
+  renderWealth();
+  renderDashboard();
+}
+
+/* ─── Cash ─── */
+function onCashChange(v){
+  ST.cash=parseFloat(v)||0;
+  saveST();
+  updateWealthBanner();
+  renderDashboard();
+}
+
+/* ─── Other Assets — FIXED ─── */
+function addOther(){
+  if(!Array.isArray(ST.otherAssets)) ST.otherAssets=[];
+  ST.otherAssets.push({id:ST.nOther++, name:'', value:0});
+  saveST();
+  renderOther();
+}
+
+function deleteOther(id){
+  ST.otherAssets=ST.otherAssets.filter(a=>a.id!==id);
+  saveST();
+  renderOther();
+  updateWealthBanner();
+  renderDashboard();
+}
+
+function onOtherChange(id,field,val){
+  const a=ST.otherAssets.find(a=>a.id===id);
+  if(!a) return;
+  a[field]=field==='value'?(parseFloat(val)||0):val;
+  saveST();
+  updateWealthBanner();
+  renderDashboard();
+}
+
+function renderOther(){
+  const list=document.getElementById('other-list');
+  const totalRow=document.getElementById('other-total-row');
+
+  if(!Array.isArray(ST.otherAssets)||ST.otherAssets.length===0){
+    list.innerHTML='<div class="empty-state"><div class="empty-icon">🏗️</div><div class="empty-text">Add land, property, investments, stocks…</div></div>';
+    totalRow.style.display='none';
+    return;
+  }
+
+  // Build HTML string — NO createElement to avoid reference bugs
+  let html='';
+  ST.otherAssets.forEach(a=>{
+    html+=`<div class="other-row">
+      <input type="text" value="${esc(a.name)}" placeholder="Asset name (e.g. شقة, Land, Stocks)"
+        style="flex:1.5;min-width:120px" oninput="onOtherChange(${a.id},'name',this.value)">
+      <div class="inp-wrap" style="flex:1;min-width:100px">
+        <span class="inp-prefix">KD</span>
+        <input type="number" class="has-prefix" value="${a.value||''}" placeholder="0.000" step="0.001"
+          oninput="onOtherChange(${a.id},'value',this.value)">
+      </div>
+      <button class="btn btn-danger btn-icon" onclick="deleteOther(${a.id})">✕</button>
+    </div>`;
+  });
+
+  list.innerHTML=html;
+  totalRow.style.display='flex';
+  document.getElementById('other-total').textContent=fmtKD(otherTotal());
+}
+
+/* ═══════════════════════════════════════════════
+   CALENDAR SWITCH
+═══════════════════════════════════════════════ */
+function switchCal(type){
+  activeCal=type;
+  document.getElementById('tab-greg').classList.toggle('active',type==='greg');
+  document.getElementById('tab-hijri').classList.toggle('active',type==='hijri');
+  document.getElementById('greg-grid').style.display=type==='greg'?'grid':'none';
+  document.getElementById('hijri-grid').style.display=type==='hijri'?'grid':'none';
+}
+
+/* ═══════════════════════════════════════════════
+   MONTH GRID
+═══════════════════════════════════════════════ */
+function renderMonthGrid(){
+  // Gregorian
+  const cur=curMoIdx();
+  let gHtml='';
+  GREG.forEach((m,i)=>{
+    const exp=monthExp(i,'greg');
+    const sal=ST.months[i]?.salary||ST.salary||0;
+    const rem=sal-exp;
+    const isCur=i===cur;
+    gHtml+=`<div class="mo-card${isCur?' is-current':''}" onclick="openMonthModal(${i},'greg')">
+      <div class="mo-label">${m.slice(0,3).toUpperCase()}${isCur?'<div class="mo-now"></div>':''}</div>
+      <div class="mo-amount">${fmtKD(exp,2)}</div>
+      <div class="mo-rem" style="color:${rem>=0?'var(--em)':'var(--rb)'}">${rem>=0?'✓ ':'! '}${fmtKD(Math.abs(rem),2)}</div>
+    </div>`;
+  });
+  document.getElementById('greg-grid').innerHTML=gHtml;
+
+  // Hijri
+  let hHtml='';
+  HIJRI_MONTHS.forEach((m,i)=>{
+    const hm=ST.hijriMonths[i];
+    const exp=monthExp(i,'hijri');
+    const sal=hm?.salary||ST.salary||0;
+    const rem=sal-exp;
+    const isRam=hm?.isRamadan;
+    const zT=isRam?((hm.zakatPersons||0)*(hm.zakatPerPerson||0)):0;
+    hHtml+=`<div class="mo-card hijri-card${isRam?' is-ramadan':''}" onclick="openMonthModal(${i},'hijri')">
+      <div class="mo-label"><span style="font-size:10px">${m.en}</span>${isRam?'<div class="mo-ram-dot"></div>':''}</div>
+      <div style="font-size:11px;color:var(--moon);margin-bottom:6px;direction:rtl">${m.ar}</div>
+      <div class="mo-amount">${fmtKD(exp,2)}</div>
+      <div class="mo-rem" style="color:${rem>=0?'var(--em)':'var(--rb)'}">${rem>=0?'✓ ':'! '}${fmtKD(Math.abs(rem),2)}</div>
+      ${isRam&&zT>0?`<div class="mo-zakat-pill">🌙 ${fmtKD(zT,2)}${hm.zakatPaid?' ✓':''}</div>`:''}
+    </div>`;
+  });
+  document.getElementById('hijri-grid').innerHTML=hHtml;
+}
+
+/* ═══════════════════════════════════════════════
+   MONTH MODAL
+═══════════════════════════════════════════════ */
+function openMonthModal(idx,calType){
+  openMonthIdx=idx;
+  openCalType=calType||'greg';
+  const isHijri=openCalType==='hijri';
+
+  document.getElementById('mm-title').textContent=
+    isHijri?`🌙 ${HIJRI_MONTHS[idx].en} — ${HIJRI_MONTHS[idx].ar}`:`📅 ${GREG[idx]}`;
+
+  const src=isHijri?ST.hijriMonths:ST.months;
+  document.getElementById('mm-salary').value=src[idx]?.salary||ST.salary||'';
+
+  renderCommitList();
+  calcMM();
+
+  // Zakat panel: only Hijri
+  const zp=document.getElementById('zakat-panel');
+  zp.style.display=isHijri?'block':'none';
+
+  if(isHijri){
+    const hm=ST.hijriMonths[idx];
+    const isRam=!!hm.isRamadan;
+    document.getElementById('mm-is-ramadan').checked=isRam;
+    document.getElementById('zakat-inputs').style.display=isRam?'block':'none';
+    document.getElementById('zakat-off-msg').style.display=isRam?'none':'block';
+    document.getElementById('ram-lbl').textContent=isRam?'✓ Ramadan':'Ramadan Month';
+    if(isRam){
+      document.getElementById('zakat-persons').value=hm.zakatPersons||'';
+      document.getElementById('zakat-pp').value=hm.zakatPerPerson||'';
+      document.getElementById('zakat-paid').checked=!!hm.zakatPaid;
+      document.getElementById('zakat-paid-lbl').textContent=hm.zakatPaid?'✓ Paid':'Mark as Paid';
+      calcZakat();
+    }
+  }
+
+  document.getElementById('month-modal').classList.add('open');
+}
+
+function closeMonthModal(){
+  document.getElementById('month-modal').classList.remove('open');
+  openMonthIdx=null;
+  renderMonthGrid();
+  renderDashboard();
+}
+
+function renderCommitList(){
+  const src=openCalType==='hijri'?ST.hijriMonths:ST.months;
+  const m=src[openMonthIdx];
+  let html=(m.commits||[]).map(c=>`
+    <div class="commit-row">
+      <input type="text" value="${esc(c.name)}" placeholder="Expense name" style="flex:1.4"
+        oninput="updateCommit(${c.id},'name',this.value)">
+      <div class="inp-wrap" style="flex:1">
+        <span class="inp-prefix">KD</span>
+        <input type="number" class="has-prefix" value="${c.amount||''}" placeholder="0.000" step="0.001"
+          oninput="updateCommit(${c.id},'amount',this.value)">
+      </div>
+      <button class="btn btn-danger btn-icon" onclick="deleteCommit(${c.id})">✕</button>
+    </div>`).join('');
+  document.getElementById('commit-list').innerHTML=html;
+}
+
+function addCommitRow(){
+  const src=openCalType==='hijri'?ST.hijriMonths:ST.months;
+  if(!src[openMonthIdx].commits) src[openMonthIdx].commits=[];
+  src[openMonthIdx].commits.push({id:ST.nCommit++, name:'', amount:0});
+  renderCommitList();
+  calcMM();
+}
+
+function deleteCommit(id){
+  const src=openCalType==='hijri'?ST.hijriMonths:ST.months;
+  src[openMonthIdx].commits=(src[openMonthIdx].commits||[]).filter(c=>c.id!==id);
+  renderCommitList();
+  calcMM();
+}
+
+function updateCommit(id,field,val){
+  const src=openCalType==='hijri'?ST.hijriMonths:ST.months;
+  const c=(src[openMonthIdx].commits||[]).find(c=>c.id===id);
+  if(!c) return;
+  c[field]=field==='amount'?(parseFloat(val)||0):val;
+  calcMM();
+}
+
+function calcMM(){
+  const src=openCalType==='hijri'?ST.hijriMonths:ST.months;
+  const sal=parseFloat(document.getElementById('mm-salary').value)||0;
+  const m=src[openMonthIdx];
+  m.salary=sal;
+  const total=(m.commits||[]).reduce((s,c)=>s+(parseFloat(c.amount)||0),0);
+  const rem=sal-total;
+  const p=pct(total,sal);
+
+  document.getElementById('mm-total').textContent=fmtKD(total);
+  const remEl=document.getElementById('mm-rem');
+  remEl.textContent=fmtKD(Math.abs(rem));
+  remEl.style.color=rem<0?'var(--rb)':'var(--em)';
+  document.getElementById('mm-prog').style.width=p+'%';
+  saveST();
+}
+
+/* ─── Ramadan / Zakat ─── */
+function onRamadanToggle(){
+  const isRam=document.getElementById('mm-is-ramadan').checked;
+  const hm=ST.hijriMonths[openMonthIdx];
+  hm.isRamadan=isRam;
+  document.getElementById('zakat-inputs').style.display=isRam?'block':'none';
+  document.getElementById('zakat-off-msg').style.display=isRam?'none':'block';
+  document.getElementById('ram-lbl').textContent=isRam?'✓ Ramadan':'Ramadan Month';
+  if(isRam){
+    document.getElementById('zakat-persons').value=hm.zakatPersons||'';
+    document.getElementById('zakat-pp').value=hm.zakatPerPerson||'';
+    calcZakat();
+  }
+  saveST();
+}
+
+function calcZakat(){
+  if(!ST.hijriMonths[openMonthIdx]?.isRamadan) return;
+  const p=parseFloat(document.getElementById('zakat-persons').value)||0;
+  const pp=parseFloat(document.getElementById('zakat-pp').value)||0;
+  ST.hijriMonths[openMonthIdx].zakatPersons=p;
+  ST.hijriMonths[openMonthIdx].zakatPerPerson=pp;
+  document.getElementById('zakat-total').textContent=fmtKD(p*pp);
+  saveST();
+}
+
+function onZakatPaidChange(){
+  const paid=document.getElementById('zakat-paid').checked;
+  ST.hijriMonths[openMonthIdx].zakatPaid=paid;
+  document.getElementById('zakat-paid-lbl').textContent=paid?'✓ Paid':'Mark as Paid';
+  saveST();
+}
+
+function saveMonthData(){
+  const src=openCalType==='hijri'?ST.hijriMonths:ST.months;
+  src[openMonthIdx].salary=parseFloat(document.getElementById('mm-salary').value)||0;
+  saveST();
+  closeMonthModal();
+  const name=openCalType==='hijri'?HIJRI_MONTHS[openMonthIdx].en:GREG[openMonthIdx];
+  showToast('✓ '+name+' saved');
+}
+
+/* ═══════════════════════════════════════════════
+   YEAR VIEW
+═══════════════════════════════════════════════ */
+function renderYear(){
+  document.getElementById('yr-label').textContent=NOW().getFullYear();
+
+  const data=GREG.map((_,i)=>({
+    name:GREG[i].slice(0,3),
+    sal:ST.months[i]?.salary||ST.salary||0,
+    exp:monthExp(i,'greg')
+  }));
+
+  const totExp=data.reduce((s,d)=>s+d.exp,0);
+  const totSal=data.reduce((s,d)=>s+d.sal,0);
+  const totRem=totSal-totExp;
+
+  document.getElementById('yr-total').textContent=fmtKD(totExp);
+  document.getElementById('yr-avg').textContent=fmtKD(totExp/12);
+  const remEl=document.getElementById('yr-rem');
+  remEl.textContent=fmtKD(Math.abs(totRem));
+  remEl.style.color=totRem<0?'var(--rb)':'var(--em)';
+
+  const cur=curMoIdx();
+  document.getElementById('yr-tbody').innerHTML=data.map((d,i)=>{
+    const rem=d.sal-d.exp,p=pct(d.exp,d.sal),isCur=i===cur;
+    return `<tr style="${isCur?'background:rgba(200,154,66,.06)':''}" >
+      <td>${GREG[i]}${isCur?' <span class="badge bg-gold" style="font-size:10px">NOW</span>':''}</td>
+      <td>${fmtKD(d.sal)}</td>
+      <td style="color:var(--rb)">${fmtKD(d.exp)}</td>
+      <td style="color:${rem>=0?'var(--em)':'var(--rb)'}">${fmtKD(Math.abs(rem))}</td>
+      <td><span class="badge ${rem>=0?'bg-green':'bg-red'}">${Math.round(p)}%</span></td>
+    </tr>`;
+  }).join('');
+
+  const maxExp=Math.max(...data.map(d=>d.exp),1);
+  document.getElementById('yr-bars').innerHTML=data.map(d=>`
+    <div class="yr-bar-row">
+      <span class="yr-bar-mo">${d.name}</span>
+      <div class="yr-bar-track"><div class="yr-bar-inner" style="width:${pct(d.exp,maxExp)}%"></div></div>
+      <span class="yr-bar-val">${fmtKD(d.exp,2)}</span>
+    </div>`).join('');
+
+  const ctx=document.getElementById('yr-chart');
+  if(yrChart) yrChart.destroy();
+  yrChart=new Chart(ctx,{
+    type:'bar',
+    data:{
+      labels:data.map(d=>d.name),
+      datasets:[
+        {label:'Expenses',data:data.map(d=>d.exp),backgroundColor:'rgba(224,91,91,.25)',borderColor:'rgba(224,91,91,.7)',borderWidth:1,borderRadius:4},
+        {label:'Salary',data:data.map(d=>d.sal),type:'line',tension:.35,fill:false,borderColor:'rgba(46,204,142,.5)',borderWidth:2,pointBackgroundColor:'rgba(46,204,142,.8)',pointRadius:3}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{labels:{color:'#7A7870',font:{family:'Outfit',size:11}}},
+        tooltip:{backgroundColor:'#152038',borderColor:'rgba(226,185,106,.2)',borderWidth:1,titleColor:'#E2B96A',bodyColor:'#BDB9B0',callbacks:{label:c=>' '+fmtKD(c.raw)}}
+      },
+      scales:{
+        x:{ticks:{color:'#7A7870',font:{family:'Outfit',size:11}},grid:{color:'rgba(255,255,255,.03)'}},
+        y:{ticks:{color:'#7A7870',font:{family:'Outfit',size:11},callback:v=>'KD '+v.toLocaleString()},grid:{color:'rgba(255,255,255,.03)'}}
+      }
+    }
+  });
+}
+
+/* ═══════════════════════════════════════════════
+   TOAST & ESC
+═══════════════════════════════════════════════ */
+let _tt;
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+function esc(s){
+  return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+/* ═══════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════ */
+loadST();
+renderDashboard();
+
+// Update date every minute
+setInterval(renderDates, 60000);
+</script>
+
+<!-- HOSTING INSTRUCTIONS (hidden comment) -->
+<!--
+═════════════════════════════════════════════
+  HOSTING ON GITHUB PAGES — 3 EASY STEPS
+═════════════════════════════════════════════
+
+1. CREATE REPO:
+   - Go to github.com → New repository
+   - Name it: myzaan (or any name)
+   - Set to PUBLIC
+   - Click "Create repository"
+
+2. UPLOAD FILE:
+   - Click "Add file" → "Upload files"
+   - Drag this file → rename it to: index.html
+   - Commit changes
+
+3. ENABLE GITHUB PAGES:
+   - Go to repo Settings → Pages
+   - Source: Deploy from branch
+   - Branch: main → /(root) → Save
+   - Your app will be live at:
+     https://YOUR-USERNAME.github.io/myzaan/
+
+That's it! Share the link with anyone.
+Data is stored locally in each user's browser (LocalStorage).
+═════════════════════════════════════════════
+-->
+</body>
+</html>
