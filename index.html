@@ -420,7 +420,7 @@ tbody tr:hover{background:var(--n700)}
       <div class="tbl-wrap">
         <div id="gold-empty" class="empty-state"><div class="empty-icon">🥇</div><div class="empty-text">No gold entries yet.<br>Click "+ Add Gold" to begin.</div></div>
         <table id="gold-table" style="display:none">
-          <thead><tr><th>Karat</th><th>Bars</th><th>g/Bar</th><th>Total g</th><th>Buy/g</th><th>Current/g</th><th>Purchase KD</th><th>Current KD</th><th>P&amp;L</th><th>P&amp;L %</th><th></th></tr></thead>
+          <thead><tr><th>Karat</th><th>Bars</th><th>g/Bar</th><th>Total g</th><th>Buy/g</th><th>Current/g</th><th>Purchase KD</th><th>Current KD</th><th>P&amp;L</th><th>P&amp;L %</th><th>Edit</th><th>Del</th></tr></thead>
           <tbody id="gold-tbody"></tbody>
         </table>
       </div>
@@ -444,7 +444,7 @@ tbody tr:hover{background:var(--n700)}
       <div class="tbl-wrap">
         <div id="silver-empty" class="empty-state"><div class="empty-icon">🥈</div><div class="empty-text">No silver entries yet.<br>Click "+ Add Silver" to begin.</div></div>
         <table id="silver-table" style="display:none">
-          <thead><tr><th>Purity</th><th>Bars</th><th>g/Bar</th><th>Total g</th><th>Buy/g</th><th>Current/g</th><th>Purchase KD</th><th>Current KD</th><th>P&amp;L</th><th>P&amp;L %</th><th></th></tr></thead>
+          <thead><tr><th>Purity</th><th>Bars</th><th>g/Bar</th><th>Total g</th><th>Buy/g</th><th>Current/g</th><th>Purchase KD</th><th>Current KD</th><th>P&amp;L</th><th>P&amp;L %</th><th>Edit</th><th>Del</th></tr></thead>
           <tbody id="silver-tbody"></tbody>
         </table>
       </div>
@@ -737,7 +737,7 @@ let ST={
   months:{},
   nMetal:1, nCash:200, nOther:100, nCommit:500
 };
-let openMonthIdx=null, yrChart=null, currentMetalType='gold';
+let openMonthIdx=null, yrChart=null, currentMetalType='gold', editingMetalId=null;
 
 /* ═══ STORAGE ═══ */
 function loadST(){
@@ -879,7 +879,8 @@ function renderMetalTable(type){
       <td>${fmtKD(cur)}</td>
       <td><span class="badge ${pl>=0?'bg-green':'bg-red'}">${fmtSign(pl,2)}</span></td>
       <td><span class="badge ${plPct>=0?'bg-green':'bg-red'}">${fmtPct(plPct)}</span></td>
-      <td><button class="btn btn-danger btn-icon" onclick="deleteMetal('${type}',${e.id})">✕</button></td>
+      <td><button class="btn btn-ghost btn-icon" onclick="editMetal('${type}',${e.id})" title="Edit">✎</button></td>
+      <td><button class="btn btn-danger btn-icon" onclick="deleteMetal('${type}',${e.id})" title="Delete">✕</button></td>
     </tr>`;
   }).join('');
 }
@@ -897,10 +898,12 @@ function updateWealthBanner(){
 
 /* ─── Metal Modal ─── */
 function openMetalModal(type){
+  editingMetalId=null;
   currentMetalType=type;
   const isGold=type==='gold';
   document.getElementById('metal-modal-title').textContent=isGold?'🥇 Add Gold Entry':'🥈 Add Silver Entry';
   document.getElementById('metal-save-btn').className='btn '+(isGold?'btn-gold':'btn-silver');
+  document.getElementById('metal-save-btn').textContent='Save';
   document.getElementById('m-karat-label').textContent=isGold?'Karat':'Purity';
   const sel=document.getElementById('m-karat');
   sel.innerHTML=isGold
@@ -910,7 +913,37 @@ function openMetalModal(type){
   document.getElementById('modal-pl-preview').style.display='none';
   document.getElementById('metal-modal').classList.add('open');
 }
-function closeMetalModal(){document.getElementById('metal-modal').classList.remove('open')}
+
+function editMetal(type,id){
+  const entries=type==='gold'?ST.goldEntries:ST.silverEntries;
+  const e=entries.find(e=>e.id===id);
+  if(!e) return;
+  editingMetalId=id;
+  currentMetalType=type;
+  const isGold=type==='gold';
+  document.getElementById('metal-modal-title').textContent=isGold?'✎ Edit Gold Entry':'✎ Edit Silver Entry';
+  document.getElementById('metal-save-btn').className='btn '+(isGold?'btn-gold':'btn-silver');
+  document.getElementById('metal-save-btn').textContent='Update';
+  document.getElementById('m-karat-label').textContent=isGold?'Karat':'Purity';
+  const sel=document.getElementById('m-karat');
+  sel.innerHTML=isGold
+    ?`<option value="24K">24K — Pure Gold</option><option value="22K">22K — High Karat</option><option value="21K">21K — Kuwait Common</option><option value="18K">18K — Mixed Gold</option>`
+    :`<option value="999">999 — Pure Silver</option><option value="925">925 — Sterling Silver</option><option value="800">800 — Coin Silver</option>`;
+  sel.value=e.karat||'21K';
+  document.getElementById('m-bars').value=e.bars||'';
+  document.getElementById('m-weight').value=e.weight||'';
+  document.getElementById('m-buy').value=e.buy||'';
+  document.getElementById('m-cur').value=e.cur||'';
+  document.getElementById('m-notes').value=e.notes||'';
+  calcModalPL();
+  document.getElementById('metal-modal').classList.add('open');
+}
+
+function closeMetalModal(){
+  document.getElementById('metal-modal').classList.remove('open');
+  editingMetalId=null;
+  document.getElementById('metal-save-btn').textContent='Save';
+}
 
 function calcModalPL(){
   const bars=parseFloat(document.getElementById('m-bars').value)||0;
@@ -947,16 +980,50 @@ function saveMetalEntry(){
   const cur=parseFloat(document.getElementById('m-cur').value)||0;
   const notes=document.getElementById('m-notes').value.trim();
   if(bars<=0||weight<=0){showToast('⚠ Enter bars and weight');return}
-  const entry={id:ST.nMetal++,karat,bars,weight,buy,cur,notes};
-  if(currentMetalType==='gold') ST.goldEntries.push(entry);
-  else ST.silverEntries.push(entry);
-  saveST();closeMetalModal();renderWealth();renderDashboard();
-  showToast('✓ '+karat+' entry saved');
+
+  if(editingMetalId!==null){
+    const entries=currentMetalType==='gold'?ST.goldEntries:ST.silverEntries;
+    const e=entries.find(e=>e.id===editingMetalId);
+    if(e){e.karat=karat;e.bars=bars;e.weight=weight;e.buy=buy;e.cur=cur;e.notes=notes}
+    saveST();closeMetalModal();renderWealth();renderDashboard();
+    showToast('✓ Entry updated');
+  } else {
+    const entry={id:ST.nMetal++,karat,bars,weight,buy,cur,notes};
+    if(currentMetalType==='gold') ST.goldEntries.push(entry);
+    else ST.silverEntries.push(entry);
+    saveST();closeMetalModal();renderWealth();renderDashboard();
+    showToast('✓ '+karat+' entry saved');
+  }
 }
 function deleteMetal(type,id){
   if(type==='gold') ST.goldEntries=ST.goldEntries.filter(e=>e.id!==id);
   else ST.silverEntries=ST.silverEntries.filter(e=>e.id!==id);
   saveST();renderWealth();renderDashboard();
+}
+function editMetal(type,id){
+  const entries=type==='gold'?ST.goldEntries:ST.silverEntries;
+  const e=entries.find(e=>e.id===id);
+  if(!e) return;
+  editingMetalId=id;
+  currentMetalType=type;
+  const isGold=type==='gold';
+  document.getElementById('metal-modal-title').textContent=isGold?'✎ Edit Gold Entry':'✎ Edit Silver Entry';
+  const saveBtn=document.getElementById('metal-save-btn');
+  saveBtn.className='btn '+(isGold?'btn-gold':'btn-silver');
+  saveBtn.textContent='Update';
+  document.getElementById('m-karat-label').textContent=isGold?'Karat':'Purity';
+  const sel=document.getElementById('m-karat');
+  sel.innerHTML=isGold
+    ?`<option value="24K">24K — Pure Gold</option><option value="22K">22K — High Karat</option><option value="21K">21K — Kuwait Common</option><option value="18K">18K — Mixed Gold</option>`
+    :`<option value="999">999 — Pure Silver</option><option value="925">925 — Sterling Silver</option><option value="800">800 — Coin Silver</option>`;
+  sel.value=e.karat||'21K';
+  document.getElementById('m-bars').value=e.bars||'';
+  document.getElementById('m-weight').value=e.weight||'';
+  document.getElementById('m-buy').value=e.buy||'';
+  document.getElementById('m-cur').value=e.cur||'';
+  document.getElementById('m-notes').value=e.notes||'';
+  calcModalPL();
+  document.getElementById('metal-modal').classList.add('open');
 }
 
 /* ─── Cash Records ─── */
@@ -984,15 +1051,16 @@ function renderCashList(){
   }
   let html='';
   ST.cashRecords.forEach(a=>{
-    html+=`<div class="record-row">
-      <input type="text" value="${esc(a.name)}" placeholder="e.g. Bank Al-Kuwait, Saving, Cash" style="flex:1.5;min-width:120px" oninput="onCashChange(${a.id},'name',this.value)">
+    html+=`<div style="overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:2px">
+    <div class="record-row" style="min-width:500px">
+      <input type="text" value="${esc(a.name)}" placeholder="e.g. Bank Al-Kuwait, Saving, Cash" style="flex:1.5;min-width:140px" oninput="onCashChange(${a.id},'name',this.value)">
       <input type="date" value="${esc(a.date||'')}" style="flex:0.8;min-width:130px" oninput="onCashChange(${a.id},'date',this.value)" title="Date (optional)">
-      <div class="inp-wrap" style="flex:1;min-width:100px">
+      <div class="inp-wrap" style="flex:1;min-width:110px">
         <span class="inp-prefix">KD</span>
         <input type="number" class="has-prefix" value="${a.value||''}" placeholder="0.000" step="0.001" oninput="onCashChange(${a.id},'value',this.value)">
       </div>
-      <button class="btn btn-danger btn-icon" onclick="deleteCash(${a.id})">✕</button>
-    </div>`;
+      <button class="btn btn-danger btn-icon" onclick="deleteCash(${a.id})" title="Delete">✕</button>
+    </div></div>`;
   });
   list.innerHTML=html;
   totalRow.style.display='flex';
@@ -1024,14 +1092,15 @@ function renderOther(){
   }
   let html='';
   ST.otherAssets.forEach(a=>{
-    html+=`<div class="record-row">
-      <input type="text" value="${esc(a.name)}" placeholder="e.g. شقة, Land, Stocks" style="flex:1.5;min-width:120px" oninput="onOtherChange(${a.id},'name',this.value)">
-      <div class="inp-wrap" style="flex:1;min-width:100px">
+    html+=`<div style="overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:2px">
+    <div class="record-row" style="min-width:380px">
+      <input type="text" value="${esc(a.name)}" placeholder="e.g. شقة, Land, Stocks" style="flex:1.5;min-width:140px" oninput="onOtherChange(${a.id},'name',this.value)">
+      <div class="inp-wrap" style="flex:1;min-width:110px">
         <span class="inp-prefix">KD</span>
         <input type="number" class="has-prefix" value="${a.value||''}" placeholder="0.000" step="0.001" oninput="onOtherChange(${a.id},'value',this.value)">
       </div>
-      <button class="btn btn-danger btn-icon" onclick="deleteOther(${a.id})">✕</button>
-    </div>`;
+      <button class="btn btn-danger btn-icon" onclick="deleteOther(${a.id})" title="Delete">✕</button>
+    </div></div>`;
   });
   list.innerHTML=html;
   totalRow.style.display='flex';
