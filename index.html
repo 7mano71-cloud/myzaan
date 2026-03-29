@@ -32,12 +32,12 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 /* SIDEBAR */
 #sidebar{position:fixed;left:0;top:0;bottom:0;width:var(--sb-w);background:var(--n900);border-right:1px solid var(--bdr);display:flex;flex-direction:column;z-index:50;transition:transform .32s var(--ease);overflow-y:auto}
 @media(max-width:960px){
-  #sidebar{transform:translateX(-100%) !important;z-index:500}
-  #sidebar.open{transform:translateX(0) !important;box-shadow:8px 0 40px rgba(0,0,0,.6)}
+  #sidebar{transform:translateX(-100%);z-index:500;width:280px;max-width:85vw}
+  #sidebar.open{transform:translateX(0);box-shadow:8px 0 40px rgba(0,0,0,.6)}
 }
-#mob-header{display:none;position:fixed;top:0;left:0;right:0;height:58px;background:var(--n900);border-bottom:1px solid var(--bdr);align-items:center;justify-content:space-between;padding:0 18px;z-index:600}
-.mob-brand{font-family:'Cormorant Garamond',serif;font-size:26px;font-style:italic;background:linear-gradient(135deg,var(--gold),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-#mob-toggle{width:40px;height:40px;border-radius:var(--rsm);background:var(--n700);border:1px solid var(--bdr);color:var(--t2);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+#mob-header{display:none;position:fixed;top:0;left:0;right:0;height:54px;background:var(--n900);border-bottom:1px solid var(--bdr);align-items:center;justify-content:space-between;padding:0 14px;z-index:600;box-sizing:border-box}
+.mob-brand{font-family:'Cormorant Garamond',serif;font-size:22px;font-style:italic;background:linear-gradient(135deg,var(--gold),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:calc(100vw - 80px)}
+#mob-toggle{width:40px;height:40px;min-width:40px;border-radius:var(--rsm);background:var(--n700);border:1px solid var(--bdr);color:var(--t2);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
 #mob-toggle:hover,#mob-toggle:active{background:var(--n500);color:var(--gold)}
 #overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(6px);z-index:300}
 #overlay.open{display:block}
@@ -270,37 +270,133 @@ tbody tr:hover{background:var(--n700)}
 /* RESPONSIVE */
 @media(max-width:960px){
   #mob-header{display:flex !important}
-  #main{margin-left:0 !important;padding-top:58px !important}
-  #sidebar{transform:translateX(-100%) !important}
-  #sidebar.open{transform:translateX(0) !important;box-shadow:8px 0 40px rgba(0,0,0,.6)}
-  .page{padding:22px 16px}
+  #main{margin-left:0;padding-top:54px}
+  #sidebar{transform:translateX(-100%)}
+  #sidebar.open{transform:translateX(0);box-shadow:8px 0 40px rgba(0,0,0,.6)}
+  #sb-close{display:flex !important}
+  .page{padding:18px 14px}
   .g2,.g3,.g4{grid-template-columns:1fr 1fr}
   .month-grid{grid-template-columns:repeat(3,1fr)}
   .fg.c2,.fg.c3{grid-template-columns:1fr}
-  .pg-title{font-size:30px}
-  .hero-amount{font-size:32px}
+  .pg-title{font-size:26px}
+  .hero-amount{font-size:28px}
   .salary-row{flex-direction:column;align-items:flex-start}
   .sal-inp-wrap{width:100%}
   .about-bilingual{grid-template-columns:1fr}
+  .wealth-banner{padding:20px}
+  .sec{margin-bottom:22px}
+  .card{padding:18px}
+  .hero-card{padding:20px 18px}
+  .modal-box{max-height:95vh;margin:0 4px}
+  .modal-body{padding:18px}
+  .fg.c3{grid-template-columns:1fr 1fr}
+  #toast{bottom:16px;right:16px;left:16px;text-align:center}
+  .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  table{min-width:600px}
 }
 @media(max-width:600px){
   .g2,.g3,.g4{grid-template-columns:1fr}
   .month-grid{grid-template-columns:repeat(2,1fr)}
+  .pg-title{font-size:22px}
+  .hero-amount{font-size:26px}
+  .hero-chips{gap:6px}
+  .chip{font-size:11px;padding:4px 10px}
+  .salary-band{padding:20px 16px}
+  .mpill{min-width:90px;padding:8px 12px}
+  .mpill-val{font-size:15px}
+  .fg.c3{grid-template-columns:1fr}
+  .mo-card{padding:14px 12px}
+  .mo-amount{font-size:18px}
+  .wealth-banner{flex-direction:column;gap:16px}
+  .wealth-banner>div:last-child{text-align:left}
 }
+
+/* CANVAS BACKGROUND */
+#bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.55}
+
+/* PAGE ENTRY ANIMATIONS */
+@keyframes pgIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.page.active{animation:pgIn .45s cubic-bezier(.4,0,.2,1) both}
+
+/* STAGGER CHILDREN ON PAGE LOAD */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+.stagger>*{opacity:0;animation:fadeUp .5s cubic-bezier(.4,0,.2,1) both}
+.stagger>*:nth-child(1){animation-delay:.05s}
+.stagger>*:nth-child(2){animation-delay:.13s}
+.stagger>*:nth-child(3){animation-delay:.21s}
+.stagger>*:nth-child(4){animation-delay:.29s}
+.stagger>*:nth-child(5){animation-delay:.37s}
+.stagger>*:nth-child(6){animation-delay:.45s}
+
+/* CARD HOVER LIFT */
+.card,.mini-card{transition:border-color .22s,transform .22s,box-shadow .22s}
+.card:hover{border-color:var(--bdr2);transform:translateY(-2px);box-shadow:var(--sh-lg)}
+
+/* HEADER GLOW PULSE */
+@keyframes headerGlow{0%,100%{text-shadow:0 0 20px rgba(226,185,106,.0)}50%{text-shadow:0 0 40px rgba(226,185,106,.25),0 0 80px rgba(226,185,106,.1)}}
+.brand-name{animation:headerGlow 4s ease-in-out infinite}
+.mob-brand{animation:headerGlow 4s ease-in-out infinite}
+
+/* SIDEBAR NAV SMOOTH */
+.nav-btn{transition:all .25s cubic-bezier(.4,0,.2,1)}
+
+/* NUMBER COUNT ANIMATION CLASS */
+.count-anim{transition:color .3s ease}
+.count-anim.flash{color:var(--gold) !important}
+
+/* MOBILE SAFE AREAS (iPhone notch/home bar) */
+@supports(padding:max(0px)){
+  @media(max-width:960px){
+    #mob-header{
+      padding-left:max(14px,env(safe-area-inset-left));
+      padding-right:max(14px,env(safe-area-inset-right));
+      height:max(54px,calc(54px + env(safe-area-inset-top)));
+      padding-top:env(safe-area-inset-top);
+    }
+    #main{padding-top:max(54px,calc(54px + env(safe-area-inset-top)))}
+    #sidebar{padding-bottom:env(safe-area-inset-bottom)}
+    .page{padding-bottom:max(24px,env(safe-area-inset-bottom))}
+    #toast{bottom:max(16px,env(safe-area-inset-bottom))}
+  }
+}
+
+/* SMOOTH SCROLL ON MOBILE */
+html{-webkit-overflow-scrolling:touch}
+#main{-webkit-overflow-scrolling:touch}
+#sidebar{-webkit-overflow-scrolling:touch}
+
+/* PREVENT DOUBLE TAP ZOOM ON MOBILE */
+button,.nav-btn,.hero-card,.mo-card{touch-action:manipulation}
+
+/* BETTER TAP TARGETS ON MOBILE */
+@media(max-width:960px){
+  .btn{min-height:44px}
+  .nav-btn{min-height:48px}
+  input[type=text],input[type=number],input[type=date],select{min-height:44px;font-size:16px}
+}
+
+/* PREVENT iOS FONT SIZE INFLATION */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 </style>
 </head>
 <body>
 
+<canvas id="bg-canvas"></canvas>
+
 <div id="mob-header">
-  <span class="mob-brand">Myzaan</span>
   <button id="mob-toggle" onclick="toggleSidebar()">☰</button>
+  <span class="mob-brand">Myzaan <span style="font-family:'Outfit',sans-serif;font-size:14px;font-style:normal;-webkit-text-fill-color:var(--t2);color:var(--t2);opacity:.85">ميزان</span></span>
+  <div style="width:40px;flex-shrink:0"></div>
 </div>
 <div id="overlay" onclick="closeSidebar()"></div>
 
 <aside id="sidebar">
-  <div class="brand">
-    <div class="brand-name">Myzaan <span style="font-family:'Outfit',sans-serif;font-size:22px;font-style:normal;color:var(--t2);opacity:1;-webkit-text-fill-color:var(--t2)">ميزان</span></div>
-    <div class="brand-tag">Personal Finance · KWD</div>
+  <div class="brand" style="display:flex;align-items:flex-start;justify-content:space-between">
+    <div>
+      <div class="brand-name">Myzaan <span style="font-family:'Outfit',sans-serif;font-size:22px;font-style:normal;color:var(--t2);opacity:1;-webkit-text-fill-color:var(--t2)">ميزان</span></div>
+      <div class="brand-tag">Personal Finance · KWD</div>
+    </div>
+    <button id="sb-close" onclick="closeSidebar()" style="display:none;width:34px;height:34px;min-width:34px;border-radius:var(--rsm);background:var(--n700);border:1px solid var(--bdr);color:var(--t2);font-size:16px;cursor:pointer;align-items:center;justify-content:center;margin-top:4px">✕</button>
   </div>
   <nav>
     <div class="nav-sec">Overview</div>
@@ -327,7 +423,7 @@ tbody tr:hover{background:var(--n700)}
     <span class="date-type">Today</span>
     <span class="date-val" id="date-greg">—</span>
   </div>
-  <div class="sec">
+  <div class="sec stagger">
     <div class="salary-band">
       <div class="salary-row">
         <div>
@@ -1199,12 +1295,130 @@ function showToast(msg){const t=document.getElementById('toast');t.textContent=m
 /* ═══ INIT ═══ */
 loadST();
 renderDashboard();
-// attach live P&L preview to modal inputs after DOM ready
 ['m-bars','m-weight','m-buy','m-cur'].forEach(id=>{
   const el=document.getElementById(id);
   if(el) el.addEventListener('input',calcModalPL);
 });
 setInterval(renderDate,60000);
+
+/* ═══ BACKGROUND CANVAS ANIMATION ═══ */
+(function(){
+  const canvas=document.getElementById('bg-canvas');
+  if(!canvas) return;
+  const ctx=canvas.getContext('2d');
+  let W,H,particles=[];
+
+  function resize(){
+    W=canvas.width=window.innerWidth;
+    H=canvas.height=window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize',resize);
+
+  // Create floating particles
+  function createParticles(){
+    particles=[];
+    const count=Math.min(60, Math.floor((W*H)/22000));
+    for(let i=0;i<count;i++){
+      const gold=Math.random()>.4;
+      particles.push({
+        x:Math.random()*W,
+        y:Math.random()*H,
+        r:Math.random()*1.4+.3,
+        vx:(Math.random()-.5)*.18,
+        vy:(Math.random()-.5)*.18,
+        alpha:Math.random()*.5+.15,
+        gold,
+        pulse:Math.random()*Math.PI*2,
+        pulseSpeed:Math.random()*.006+.003
+      });
+    }
+  }
+  createParticles();
+  window.addEventListener('resize',createParticles);
+
+  // Connection lines
+  function drawLines(){
+    for(let i=0;i<particles.length;i++){
+      for(let j=i+1;j<particles.length;j++){
+        const dx=particles[i].x-particles[j].x;
+        const dy=particles[i].y-particles[j].y;
+        const dist=Math.sqrt(dx*dx+dy*dy);
+        if(dist<120){
+          const alpha=(1-dist/120)*.12;
+          ctx.beginPath();
+          ctx.strokeStyle=`rgba(226,185,106,${alpha})`;
+          ctx.lineWidth=.5;
+          ctx.moveTo(particles[i].x,particles[i].y);
+          ctx.lineTo(particles[j].x,particles[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+  }
+
+  // Ambient glow orbs (subtle)
+  let orbAngle=0;
+  function drawOrbs(){
+    orbAngle+=.0004;
+    // Gold orb top-left
+    const gx=W*.12+Math.cos(orbAngle)*W*.04;
+    const gy=H*.12+Math.sin(orbAngle)*H*.03;
+    const gGrad=ctx.createRadialGradient(gx,gy,0,gx,gy,W*.28);
+    gGrad.addColorStop(0,'rgba(226,185,106,.055)');
+    gGrad.addColorStop(1,'rgba(226,185,106,0)');
+    ctx.fillStyle=gGrad;
+    ctx.beginPath();ctx.arc(gx,gy,W*.28,0,Math.PI*2);ctx.fill();
+
+    // Blue orb bottom-right
+    const bx=W*.88+Math.cos(orbAngle+2)*W*.04;
+    const by=H*.82+Math.sin(orbAngle+2)*H*.03;
+    const bGrad=ctx.createRadialGradient(bx,by,0,bx,by,W*.22);
+    bGrad.addColorStop(0,'rgba(77,159,232,.04)');
+    bGrad.addColorStop(1,'rgba(77,159,232,0)');
+    ctx.fillStyle=bGrad;
+    ctx.beginPath();ctx.arc(bx,by,W*.22,0,Math.PI*2);ctx.fill();
+  }
+
+  function animate(){
+    ctx.clearRect(0,0,W,H);
+    drawOrbs();
+    drawLines();
+    particles.forEach(p=>{
+      p.pulse+=p.pulseSpeed;
+      const a=p.alpha*(0.7+0.3*Math.sin(p.pulse));
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=p.gold?`rgba(226,185,106,${a})`:`rgba(77,159,232,${a*.6})`;
+      ctx.fill();
+      p.x+=p.vx; p.y+=p.vy;
+      if(p.x<-10) p.x=W+10;
+      if(p.x>W+10) p.x=-10;
+      if(p.y<-10) p.y=H+10;
+      if(p.y>H+10) p.y=-10;
+    });
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+
+/* ═══ STAGGER RE-TRIGGER ON PAGE SWITCH ═══ */
+const _origShowPage=showPage;
+window.showPage=function(id){
+  _origShowPage(id);
+  setTimeout(()=>{
+    const page=document.getElementById('page-'+id);
+    if(!page) return;
+    page.querySelectorAll('.stagger').forEach(el=>{
+      const kids=el.children;
+      Array.from(kids).forEach((k,i)=>{
+        k.style.animation='none';
+        k.offsetHeight; // reflow
+        k.style.animation='';
+      });
+    });
+  },50);
+};
 </script>
 </body>
 </html>
