@@ -51,13 +51,13 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .brand-name{font-family:'Cormorant Garamond',serif;font-size:30px;font-style:italic;font-weight:500;background:linear-gradient(135deg,var(--gold),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
 .brand-ar{font-size:13px;color:var(--t4);margin-top:2px}
 .brand-tag{display:inline-block;margin-top:8px;font-size:10px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--gold2);background:var(--glow);padding:3px 10px;border-radius:99px;border:1px solid var(--gedge)}
-nav{flex:1;padding:20px 14px;display:flex;flex-direction:column;gap:3px;overflow-y:auto}
-.nav-sec{font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--t6);padding:12px 14px 6px}
-.nav-btn{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:var(--rmd);cursor:pointer;font-family:'Outfit',sans-serif;font-size:14px;font-weight:400;color:var(--t4);border:none;background:none;width:100%;text-align:left;transition:all .2s var(--ease);position:relative}
+nav{flex:1;padding:16px 10px;display:flex;flex-direction:column;gap:2px;overflow-y:auto}
+.nav-sec{font-size:9px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--t6);padding:10px 12px 5px}
+.nav-btn{display:flex;align-items:center;gap:9px;padding:9px 12px;border-radius:var(--rmd);cursor:pointer;font-family:'Outfit',sans-serif;font-size:12px;font-weight:400;color:var(--t4);border:none;background:none;width:100%;text-align:left;transition:all .2s var(--ease);position:relative}
 .nav-btn:hover{color:var(--t1);background:rgba(226,185,106,.06)}
 .nav-btn.active{color:var(--gold);background:var(--glow);font-weight:500}
 .nav-btn.active::before{content:'';position:absolute;left:0;top:20%;bottom:20%;width:3px;border-radius:0 3px 3px 0;background:var(--gold)}
-.nav-icon{width:32px;height:32px;border-radius:var(--rsm);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;background:rgba(255,255,255,.04)}
+.nav-icon{width:26px;height:26px;border-radius:var(--rsm);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;background:rgba(255,255,255,.04)}
 .nav-btn.active .nav-icon{background:var(--glow)}
 .sb-foot{padding:18px 22px;border-top:1px solid var(--bdr);font-size:11px;color:var(--t6);display:flex;align-items:center;gap:8px;flex-shrink:0}
 .pulse{width:7px;height:7px;border-radius:50%;background:var(--em);animation:pulse 2s infinite}
@@ -259,7 +259,76 @@ tbody tr:hover{background:var(--n700)}
 .feat-desc-en{font-size:13px;color:var(--t4);line-height:1.6}
 .feat-desc-ar{font-size:14px;color:var(--t2);line-height:1.9;direction:rtl;text-align:right}
 
-/* TOAST */
+/* ── LIVING GLOW CARDS ── */
+@keyframes glowGold{
+  0%,100%{box-shadow:0 0 0 0 rgba(200,154,66,0),var(--sh-md)}
+  50%{box-shadow:0 0 28px 4px rgba(200,154,66,.18),0 0 60px 8px rgba(200,154,66,.07),var(--sh-md)}
+}
+@keyframes glowBlue{
+  0%,100%{box-shadow:0 0 0 0 rgba(77,159,232,0),var(--sh-md)}
+  50%{box-shadow:0 0 28px 4px rgba(77,159,232,.18),0 0 60px 8px rgba(77,159,232,.07),var(--sh-md)}
+}
+@keyframes glowSilver{
+  0%,100%{box-shadow:0 0 0 0 rgba(192,192,192,0),var(--sh-md)}
+  50%{box-shadow:0 0 22px 4px rgba(192,192,192,.14),var(--sh-md)}
+}
+@keyframes glowRed{
+  0%,100%{box-shadow:0 0 0 0 rgba(224,91,91,0),var(--sh-md)}
+  50%{box-shadow:0 0 22px 4px rgba(224,91,91,.14),var(--sh-md)}
+}
+.glow-card-gold{animation:glowGold 3.5s ease-in-out infinite}
+.glow-card-blue{animation:glowBlue 3.5s ease-in-out infinite;animation-delay:.8s}
+.glow-card-silver{animation:glowSilver 4s ease-in-out infinite;animation-delay:.4s}
+.glow-card-red{animation:glowRed 4s ease-in-out infinite;animation-delay:1.2s}
+.glow-card-gold:hover,.glow-card-blue:hover,.glow-card-silver:hover,.glow-card-red:hover{
+  animation:none;
+}
+
+/* ── NEW DASHBOARD ── */
+.dash-salary-hero{background:linear-gradient(135deg,var(--n700),rgba(200,154,66,.08));border:1px solid var(--bdr2);border-radius:var(--rxl);padding:28px 30px;position:relative;overflow:hidden}
+.dash-salary-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold2),var(--gold),var(--gold2))}
+.dsh-left{margin-bottom:20px}
+.dsh-label{font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--gold2);margin-bottom:8px}
+.dsh-stats{display:flex;gap:0;flex-wrap:wrap;margin-top:16px}
+.dsh-stat{padding:0 20px;display:flex;flex-direction:column;gap:5px}
+.dsh-stat:first-child{padding-left:0}
+.dsh-stat-label{font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--t6)}
+.dsh-stat-val{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:500;line-height:1}
+.dsh-divider{width:1px;background:var(--bdr);align-self:stretch;margin:0 4px}
+.dash-main-row{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+/* WEALTH CARD */
+.dash-worth-card{background:var(--n800);border:1px solid var(--bdr);border-radius:var(--rxl);padding:26px;cursor:pointer;transition:all .25s;position:relative;overflow:hidden}
+.dash-worth-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold2),var(--gold),var(--gold2))}
+.dash-worth-card:hover{border-color:var(--bdr2);transform:translateY(-2px);box-shadow:var(--sh-lg),var(--sh-gold)}
+.dwc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;gap:16px}
+.dwc-label{font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--gold2);margin-bottom:8px}
+.dwc-amount{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:500;line-height:1;margin-bottom:4px}
+.dwc-breakdown{display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--bdr);padding-top:16px}
+.dwc-item{display:flex;align-items:center;gap:8px}
+.dwc-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.dwc-name{font-size:12px;color:var(--t4);flex:1}
+.dwc-val{font-size:13px;font-weight:500;font-family:'Cormorant Garamond',serif}
+/* COMMIT CARD */
+.dash-commit-card{background:var(--n800);border:1px solid var(--bdr);border-radius:var(--rxl);padding:26px;cursor:pointer;transition:all .25s;position:relative;overflow:hidden}
+.dash-commit-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--sky),#6EB5FF)}
+.dash-commit-card:hover{border-color:rgba(77,159,232,.4);transform:translateY(-2px);box-shadow:var(--sh-lg)}
+.dcc-badge{display:inline-flex;align-items:center;padding:4px 12px;border-radius:99px;font-size:11px;font-weight:500;background:var(--sky-d);color:var(--sky);border:1px solid rgba(77,159,232,.2);margin-bottom:14px}
+.dcc-amount{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:500;line-height:1;margin-bottom:4px}
+.dcc-row{display:flex;gap:20px}
+.dcc-stat{display:flex;flex-direction:column;gap:4px}
+.dcc-stat-label{font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--t6)}
+.dcc-stat-val{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:500}
+/* ANIM CARDS */
+.anim-card{transition:all .25s}
+.anim-card:hover{border-color:var(--bdr2);transform:translateY(-2px);box-shadow:var(--sh-md)}
+/* RESPONSIVE DASHBOARD */
+@media(max-width:760px){
+  .dash-main-row{grid-template-columns:1fr}
+  .dsh-stats{gap:0}
+  .dsh-stat{padding:0 14px}
+  .dsh-stat:first-child{padding-left:0}
+  .dwc-amount,.dcc-amount{font-size:28px}
+}
 #toast{position:fixed;bottom:28px;right:28px;background:var(--n700);border:1px solid var(--bdr2);color:var(--t1);padding:13px 22px;border-radius:var(--rmd);font-size:13px;font-weight:500;z-index:9999;transform:translateY(80px);opacity:0;transition:all .3s var(--spring);box-shadow:var(--sh-lg)}
 #toast.show{transform:translateY(0);opacity:1}
 ::-webkit-scrollbar{width:5px;height:5px}
@@ -391,12 +460,9 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 <div id="overlay" onclick="closeSidebar()"></div>
 
 <aside id="sidebar">
-  <div class="brand" style="display:flex;align-items:flex-start;justify-content:space-between">
-    <div>
-      <div class="brand-name">Myzaan <span style="font-family:'Outfit',sans-serif;font-size:22px;font-style:normal;color:var(--t2);opacity:1;-webkit-text-fill-color:var(--t2)">ميزان</span></div>
-      <div class="brand-tag">Personal Finance · KWD</div>
-    </div>
-    <button id="sb-close" onclick="closeSidebar()" style="display:none;width:34px;height:34px;min-width:34px;border-radius:var(--rsm);background:var(--n700);border:1px solid var(--bdr);color:var(--t2);font-size:16px;cursor:pointer;align-items:center;justify-content:center;margin-top:4px">✕</button>
+  <div class="brand">
+    <div class="brand-name">Myzaan <span style="font-family:'Outfit',sans-serif;font-size:22px;font-style:normal;color:var(--t2);opacity:1;-webkit-text-fill-color:var(--t2)">ميزان</span></div>
+    <div class="brand-tag">Personal Finance · KWD</div>
   </div>
   <nav>
     <div class="nav-sec">Overview</div>
@@ -416,64 +482,82 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 <!-- DASHBOARD -->
 <div id="page-dashboard" class="page active">
   <div class="pg-header">
-    <div><div class="pg-title">Dashboard</div><div class="pg-sub">Your financial overview in Kuwait Dinar</div></div>
+    <div>
+      <div class="pg-title">Dashboard</div>
+      <div class="pg-sub" id="date-greg">—</div>
+    </div>
   </div>
-  <div class="date-strip">
-    <span class="date-icon">🗓</span>
-    <span class="date-type">Today</span>
-    <span class="date-val" id="date-greg">—</span>
+
+  <!-- SALARY HERO -->
+  <div class="dash-salary-hero sec">
+    <div class="dsh-left">
+      <div class="dsh-label">Monthly Salary</div>
+      <div class="sal-inp-wrap" style="max-width:260px">
+        <span class="sal-prefix">KD</span>
+        <input type="number" id="dash-salary" placeholder="0.000" step="0.001" oninput="onSalaryChange(this.value)">
+      </div>
+    </div>
+    <div class="dsh-stats">
+      <div class="dsh-stat">
+        <div class="dsh-stat-label">Expenses</div>
+        <div class="dsh-stat-val c-red" id="dash-exp">KD 0.000</div>
+      </div>
+      <div class="dsh-divider"></div>
+      <div class="dsh-stat">
+        <div class="dsh-stat-label">Remaining</div>
+        <div class="dsh-stat-val c-green" id="dash-rem">KD 0.000</div>
+      </div>
+      <div class="dsh-divider"></div>
+      <div class="dsh-stat">
+        <div class="dsh-stat-label">Used</div>
+        <div class="dsh-stat-val c-gold" id="dash-pct">0%</div>
+      </div>
+    </div>
+    <div class="prog-track" style="margin-top:18px"><div class="prog-fill red-fill" id="dash-prog" style="width:0%"></div></div>
   </div>
-  <div class="sec stagger">
-    <div class="salary-band">
-      <div class="salary-row">
-        <div>
-          <div class="salary-big-label">Monthly Salary</div>
-          <div class="sal-inp-wrap">
-            <span class="sal-prefix">KD</span>
-            <input type="number" id="dash-salary" placeholder="0.000" step="0.001" oninput="onSalaryChange(this.value)">
-          </div>
+
+  <!-- MAIN ROW -->
+  <div class="dash-main-row sec">
+
+    <!-- NET WORTH CARD -->
+    <div class="dash-worth-card glow-card-gold" onclick="showPage('wealth')">
+      <div class="dwc-label">Total Net Worth</div>
+      <div class="dwc-amount c-gold" id="dash-wealth">KD 0.000</div>
+      <div style="font-size:11px;color:var(--t6);margin-top:4px;margin-bottom:20px">Zakat 2.5% — <span class="c-gold" id="dash-zakat-mini">KD 0.000</span></div>
+      <div class="dwc-breakdown">
+        <div class="dwc-item"><span class="dwc-dot" style="background:var(--gold)"></span><span class="dwc-name">Gold</span><span class="dwc-val c-gold" id="dw-gold">KD 0</span></div>
+        <div class="dwc-item"><span class="dwc-dot" style="background:var(--silver)"></span><span class="dwc-name">Silver</span><span class="dwc-val c-silver" id="dw-silver">KD 0</span></div>
+        <div class="dwc-item"><span class="dwc-dot" style="background:var(--em)"></span><span class="dwc-name">Cash</span><span class="dwc-val c-green" id="dw-cash">KD 0</span></div>
+        <div class="dwc-item"><span class="dwc-dot" style="background:var(--sky)"></span><span class="dwc-name">Other</span><span class="dwc-val c-sky" id="dw-other">KD 0</span></div>
+      </div>
+    </div>
+
+    <!-- COMMITMENTS CARD -->
+    <div class="dash-commit-card glow-card-blue" onclick="showPage('commitments')">
+      <div class="dcc-badge">◉ Commitments</div>
+      <div class="dcc-amount c-red" id="dash-commits">KD 0.000</div>
+      <div style="font-size:11px;color:var(--t4);margin-bottom:20px">This month expenses</div>
+      <div class="dcc-row">
+        <div class="dcc-stat">
+          <div class="dcc-stat-label">Yearly Total</div>
+          <div class="dcc-stat-val c-sky" id="d-yc">KD 0</div>
         </div>
-        <div class="div-v"></div>
-        <div class="salary-stats">
-          <div class="sal-stat"><div class="sal-stat-label">Expenses</div><div class="sal-stat-val c-red" id="dash-exp">KD 0.000</div></div>
-          <div class="div-v"></div>
-          <div class="sal-stat"><div class="sal-stat-label">Remaining</div><div class="sal-stat-val c-green" id="dash-rem">KD 0.000</div></div>
+        <div class="dcc-stat">
+          <div class="dcc-stat-label">Zakat Due</div>
+          <div class="dcc-stat-val c-gold" id="d-zc">KD 0</div>
         </div>
       </div>
-      <div class="prog-track"><div class="prog-fill red-fill" id="dash-prog" style="width:0%"></div></div>
-      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--t6);margin-top:6px"><span>Budget used</span><span id="dash-pct">0%</span></div>
     </div>
+
   </div>
-  <div class="g2 sec">
-    <div class="hero-card gold-card" onclick="showPage('wealth')">
-      <div class="hero-badge gold-badge">◈ My Wealth</div>
-      <div class="hero-amount c-gold" id="dash-wealth">KD 0.000</div>
-      <div style="font-size:12px;color:var(--t4)">Total net assets</div>
-      <div class="hero-chips">
-        <span class="chip">Gold <strong id="d-gc">KD 0</strong></span>
-        <span class="chip">Silver <strong id="d-sc" style="color:var(--silver)">KD 0</strong></span>
-        <span class="chip">Cash <strong id="d-cc">KD 0</strong></span>
-      </div>
-      <div class="corner-icon">◈</div>
-    </div>
-    <div class="hero-card blue-card" onclick="showPage('commitments')">
-      <div class="hero-badge blue-badge">◉ Commitments</div>
-      <div class="hero-amount c-red" id="dash-commits">KD 0.000</div>
-      <div style="font-size:12px;color:var(--t4)">This month expenses</div>
-      <div class="hero-chips">
-        <span class="chip">Zakat <strong id="d-zc" style="color:var(--gold)">KD 0</strong></span>
-        <span class="chip">Yearly <strong id="d-yc" style="color:var(--sky)">KD 0</strong></span>
-      </div>
-      <div class="corner-icon">◉</div>
-    </div>
-  </div>
+
+  <!-- QUICK STATS -->
   <div class="sec">
-    <div class="sec-head"><div class="sec-title">Quick Stats</div></div>
     <div class="g4">
-      <div class="mini-card"><div class="mini-label">Gold Weight</div><div class="mini-val c-gold" id="qs-gw">0 g</div></div>
-      <div class="mini-card"><div class="mini-label">Silver Weight</div><div class="mini-val c-silver" id="qs-sw">0 g</div></div>
-      <div class="mini-card"><div class="mini-label">Zakat 2.5%</div><div class="mini-val c-gold" id="qs-zakat">KD 0.000</div></div>
-      <div class="mini-card"><div class="mini-label">Yearly Expenses</div><div class="mini-val c-red" id="qs-yr">KD 0.000</div></div>
+      <div class="mini-card glow-card-gold"><div class="mini-label">Gold Weight</div><div class="mini-val c-gold" id="qs-gw">0 g</div></div>
+      <div class="mini-card glow-card-silver"><div class="mini-label">Silver Weight</div><div class="mini-val c-silver" id="qs-sw">0 g</div></div>
+      <div class="mini-card glow-card-gold"><div class="mini-label">Zakat 2.5%</div><div class="mini-val c-gold" id="qs-zakat">KD 0.000</div></div>
+      <div class="mini-card glow-card-red"><div class="mini-label">Yearly Expenses</div><div class="mini-val c-red" id="qs-yr">KD 0.000</div></div>
     </div>
   </div>
 </div>
@@ -912,21 +996,28 @@ function curMoIdx(){return NOW().getMonth()}
 function curSalary(){return ST.months[curMoIdx()]?.salary||ST.salary||0}
 
 /* ═══ DASHBOARD ═══ */
+let dashDonut=null, dashSpark=null;
+
 function renderDashboard(){
   renderDate();
   const sal=curSalary(),exp=monthExp(curMoIdx()),rem=sal-exp,p=pct(exp,sal);
-  if(!document.getElementById('dash-salary').matches(':focus')) document.getElementById('dash-salary').value=sal||'';
+  if(!document.getElementById('dash-salary').matches(':focus'))
+    document.getElementById('dash-salary').value=sal||'';
   document.getElementById('dash-exp').textContent=fmtKD(exp);
   const remEl=document.getElementById('dash-rem');
   remEl.textContent=fmtKD(Math.abs(rem));remEl.style.color=rem<0?'var(--rb)':'var(--em)';
   document.getElementById('dash-prog').style.width=p+'%';
   document.getElementById('dash-pct').textContent=Math.round(p)+'%';
-  const w=totalWealth(),g=metalTotals('gold'),sv=metalTotals('silver');
+
+  const w=totalWealth(),g=metalTotals('gold'),sv=metalTotals('silver'),ct=cashTotal(),ot=otherTotal();
   const yearExp=Array.from({length:12},(_,i)=>monthExp(i)).reduce((a,b)=>a+b,0);
+
   document.getElementById('dash-wealth').textContent=fmtKD(w);
-  document.getElementById('d-gc').textContent=fmtKD(g.cur,2);
-  document.getElementById('d-sc').textContent=fmtKD(sv.cur,2);
-  document.getElementById('d-cc').textContent=fmtKD(cashTotal(),2);
+  document.getElementById('dash-zakat-mini').textContent=fmtKD(w*0.025);
+  document.getElementById('dw-gold').textContent=fmtKD(g.cur,2);
+  document.getElementById('dw-silver').textContent=fmtKD(sv.cur,2);
+  document.getElementById('dw-cash').textContent=fmtKD(ct,2);
+  document.getElementById('dw-other').textContent=fmtKD(ot,2);
   document.getElementById('dash-commits').textContent=fmtKD(exp);
   document.getElementById('d-zc').textContent=fmtKD(zakatAmount());
   document.getElementById('d-yc').textContent=fmtKD(yearExp,2);
