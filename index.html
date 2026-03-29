@@ -238,13 +238,33 @@ tbody tr:hover{background:var(--n700)}
 .about-logo{font-family:'Cormorant Garamond',serif;font-size:64px;font-style:italic;background:linear-gradient(135deg,var(--gold),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;margin-bottom:8px}
 .about-tagline{font-size:15px;color:var(--t2);font-weight:300;letter-spacing:.05em}
 .about-version{display:inline-flex;align-items:center;gap:8px;padding:8px 18px;border-radius:99px;background:var(--glow);border:1px solid var(--gedge);color:var(--gold);font-size:12px;font-weight:500;margin-top:12px}
+@keyframes designerFade{0%,100%{opacity:.25}50%{opacity:1}}
+.designer-credit{margin-top:14px;font-size:12px;color:var(--t4);letter-spacing:.05em;animation:designerFade 3s ease-in-out infinite}
 .about-section{margin-bottom:36px}
 .about-section-title{font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--gold);margin-bottom:16px}
-.about-bilingual{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:18px}
-.about-lang{background:var(--n800);border:1px solid var(--bdr);border-radius:var(--rlg);padding:22px}
-.about-lang-tag{font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--t6);margin-bottom:10px}
-.about-lang p{font-size:14px;color:var(--t2);line-height:1.9}
-.about-lang p.ar{direction:rtl;text-align:right;font-size:16px;line-height:2;color:var(--t1)}
+
+/* BILINGUAL LEFT/RIGHT */
+.about-bilingual-lr{display:grid;grid-template-columns:1fr auto 1fr;gap:0;background:var(--n800);border:1px solid var(--bdr);border-radius:var(--rxl);overflow:hidden}
+.about-lang-en{padding:24px 26px;font-size:14px;color:var(--t2);line-height:1.9}
+.about-lang-ar{padding:24px 26px;font-size:15px;color:var(--t1);line-height:2;direction:rtl;text-align:right}
+.about-divider-v{width:1px;background:var(--bdr);align-self:stretch}
+
+/* FEAT LR ROW */
+.feat-lr-row{display:grid;grid-template-columns:1fr auto 1fr;align-items:start;padding:22px 26px;border-bottom:1px solid var(--bdr)}
+.feat-lr-row:last-child{border-bottom:none}
+.feat-en-col{padding-right:24px}
+.feat-ar-col{padding-left:24px;direction:rtl;text-align:right}
+.feat-col-div{width:1px;background:var(--bdr);align-self:stretch}
+.feat-title-en{font-size:14px;font-weight:600;color:var(--t1);margin-bottom:6px}
+.feat-title-ar{font-size:14px;font-weight:600;color:var(--t1);margin-bottom:6px}
+.feat-desc-en{font-size:12px;color:var(--t4);line-height:1.7}
+.feat-desc-ar{font-size:13px;color:var(--t2);line-height:1.8}
+@media(max-width:600px){
+  .feat-lr-row{grid-template-columns:1fr;padding:18px}
+  .feat-col-div{width:100%;height:1px;margin:14px 0}
+  .feat-en-col{padding-right:0}
+  .feat-ar-col{padding-left:0}
+}
 
 /* FEATURES LIST (Style B) */
 .feat-list{display:flex;flex-direction:column;gap:0}
@@ -280,9 +300,12 @@ tbody tr:hover{background:var(--n700)}
 .glow-card-blue{animation:glowBlue 3.5s ease-in-out infinite;animation-delay:.8s}
 .glow-card-silver{animation:glowSilver 4s ease-in-out infinite;animation-delay:.4s}
 .glow-card-red{animation:glowRed 4s ease-in-out infinite;animation-delay:1.2s}
-.glow-card-gold:hover,.glow-card-blue:hover,.glow-card-silver:hover,.glow-card-red:hover{
-  animation:none;
+@keyframes glowGreen{
+  0%,100%{box-shadow:0 0 0 0 rgba(46,204,142,0),var(--sh-md)}
+  50%{box-shadow:0 0 22px 4px rgba(46,204,142,.15),var(--sh-md)}
 }
+.glow-card-green{animation:glowGreen 4s ease-in-out infinite}
+.glow-card-gold:hover,.glow-card-blue:hover,.glow-card-silver:hover,.glow-card-red:hover,.glow-card-green:hover{animation:none}
 
 /* ── NEW DASHBOARD ── */
 .dash-salary-hero{background:linear-gradient(135deg,var(--n700),rgba(200,154,66,.08));border:1px solid var(--bdr2);border-radius:var(--rxl);padding:28px 30px;position:relative;overflow:hidden}
@@ -489,7 +512,7 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
   </div>
 
   <!-- SALARY HERO -->
-  <div class="dash-salary-hero sec">
+  <div class="dash-salary-hero sec glow-card-gold">
     <div class="dsh-left">
       <div class="dsh-label">Monthly Salary</div>
       <div class="sal-inp-wrap" style="max-width:260px">
@@ -554,10 +577,10 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
   <!-- QUICK STATS -->
   <div class="sec">
     <div class="g4">
-      <div class="mini-card glow-card-gold"><div class="mini-label">Gold Weight</div><div class="mini-val c-gold" id="qs-gw">0 g</div></div>
-      <div class="mini-card glow-card-silver"><div class="mini-label">Silver Weight</div><div class="mini-val c-silver" id="qs-sw">0 g</div></div>
-      <div class="mini-card glow-card-gold"><div class="mini-label">Zakat 2.5%</div><div class="mini-val c-gold" id="qs-zakat">KD 0.000</div></div>
-      <div class="mini-card glow-card-red"><div class="mini-label">Yearly Expenses</div><div class="mini-val c-red" id="qs-yr">KD 0.000</div></div>
+      <div class="mini-card glow-card-gold" style="animation-delay:0s"><div class="mini-label">Gold Weight</div><div class="mini-val c-gold" id="qs-gw">0 g</div></div>
+      <div class="mini-card glow-card-silver" style="animation-delay:.5s"><div class="mini-label">Silver Weight</div><div class="mini-val c-silver" id="qs-sw">0 g</div></div>
+      <div class="mini-card glow-card-green" style="animation-delay:1s"><div class="mini-label">Zakat 2.5%</div><div class="mini-val c-gold" id="qs-zakat">KD 0.000</div></div>
+      <div class="mini-card glow-card-red" style="animation-delay:1.5s"><div class="mini-label">Yearly Expenses</div><div class="mini-val c-red" id="qs-yr">KD 0.000</div></div>
     </div>
   </div>
 </div>
@@ -703,19 +726,20 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
     <div class="about-logo">Myzaan</div>
     <div style="font-size:18px;color:var(--t4);font-family:'Cormorant Garamond',serif;font-style:italic;margin-bottom:6px">ميزان</div>
     <div class="about-tagline">Personal Finance · Kuwait · KWD</div>
-    <div><span class="about-version">✦ Version 7.0 &nbsp;·&nbsp; Made for Kuwait</span></div>
-    <div style="margin-top:14px;font-size:12px;color:var(--t6);letter-spacing:.05em">Designed &amp; conceptualized by <span style="color:var(--gold2)">Abdulrahman Faraj</span></div>
+    <div style="margin-bottom:8px"><span class="about-version">✦ Version 7.0 &nbsp;·&nbsp; Made for Kuwait</span></div>
+    <div class="designer-credit">Designed &amp; conceptualized by <span style="color:var(--gold2)">Abdulrahman Faraj</span></div>
   </div>
 
-  <!-- Tagline bilingual -->
+  <!-- Tagline bilingual: EN left | AR right -->
   <div class="about-section">
-    <div class="about-bilingual">
-      <div class="about-lang">
+    <div class="about-bilingual-lr">
+      <div class="about-lang-en">
         <p>In a world that never stops moving, Myzaan keeps you in control.<br><br>
         Your personal finance companion — built for Kuwait. Track your wealth and see your profits in real time. Know exactly what's left from your salary after every expense. Set your Zakat month and let Myzaan calculate it automatically. Your wealth, your spending, your commitments — all in one place, clean and instant.<br><br>
         <strong style="color:var(--gold)">Not just an app — Myzaan is your smartest financial decision.</strong></p>
       </div>
-      <div class="about-lang">
+      <div class="about-divider-v"></div>
+      <div class="about-lang-ar">
         <p class="ar">في زمن كل شي فيه يتحرك بسرعة، ميزان يخليك دايماً عارف وين وقفت.<br><br>
         ميزان هو رفيقك المالي الشخصي — مصمم خصيصاً للكويت. تتبع ثروتك وتشوف أرباحك لحظة بلحظة. اعرف شكثر يبقالك من راتبك كل شهر بعد مصاريفك. حدد شهر زكاتك وخل ميزان يحسبها لك أوتوماتيك. كل ثرواتك، كل مصاريفك، كل التزاماتك — في مكان واحد، نظيف وسريع.<br><br>
         <strong style="color:var(--gold)">مو بس تطبيق — ميزان هو قرارك الأذكى.</strong></p>
@@ -723,89 +747,76 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
     </div>
   </div>
 
-  <!-- Features -->
+  <!-- Features: EN left | AR right per row -->
   <div class="about-section">
     <div class="about-section-title">✦ Features · المميزات</div>
-    <div class="card">
-      <div class="feat-list">
+    <div class="card" style="padding:0;overflow:hidden">
 
-        <div class="feat-item">
-          <div class="feat-num">01</div>
-          <div class="feat-body">
-            <div class="feat-title-bi">
-              <span class="feat-title-en">Wealth Tracking</span>
-              <span class="feat-title-ar">تتبع الثروة</span>
-            </div>
-            <div class="feat-desc-bi">
-              <span class="feat-desc-en">Track your gold and silver by karat, weight, and purchase price. See real-time profit & loss per entry.</span>
-              <span class="feat-desc-ar">تابع ذهبك وفضتك بالعيار والوزن وسعر الشراء — وشوف الربح والخسارة لكل سجل بشكل فوري.</span>
-            </div>
-          </div>
+      <div class="feat-lr-row">
+        <div class="feat-en-col">
+          <div class="feat-title-en">Wealth Tracking</div>
+          <div class="feat-desc-en">Track your gold and silver by karat, weight, and purchase price. See real-time profit & loss per entry.</div>
         </div>
-
-        <div class="feat-item">
-          <div class="feat-num">02</div>
-          <div class="feat-body">
-            <div class="feat-title-bi">
-              <span class="feat-title-en">Salary & Expenses</span>
-              <span class="feat-title-ar">الراتب والمصاريف</span>
-            </div>
-            <div class="feat-desc-bi">
-              <span class="feat-desc-en">Know exactly what's left from your salary every month after all your commitments.</span>
-              <span class="feat-desc-ar">اعرف شكثر يبقالك من راتبك كل شهر بعد ما تطلع كل مصاريفك والتزاماتك.</span>
-            </div>
-          </div>
+        <div class="feat-col-div"></div>
+        <div class="feat-ar-col">
+          <div class="feat-title-ar">تتبع الثروة</div>
+          <div class="feat-desc-ar">تابع ذهبك وفضتك بالعيار والوزن وسعر الشراء — وشوف الربح والخسارة لكل سجل بشكل فوري.</div>
         </div>
-
-        <div class="feat-item">
-          <div class="feat-num">03</div>
-          <div class="feat-body">
-            <div class="feat-title-bi">
-              <span class="feat-title-en">Zakat Calculator</span>
-              <span class="feat-title-ar">حاسبة الزكاة</span>
-            </div>
-            <div class="feat-desc-bi">
-              <span class="feat-desc-en">Automatic Zakat calculation (2.5%) based on your total net worth. Highlight your Zakat month on the calendar.</span>
-              <span class="feat-desc-ar">حساب الزكاة أوتوماتيك (٢.٥٪) على إجمالي ثروتك. وتقدر تحدد شهر زكاتك على التقويم.</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="feat-item">
-          <div class="feat-num">04</div>
-          <div class="feat-body">
-            <div class="feat-title-bi">
-              <span class="feat-title-en">Year View & Charts</span>
-              <span class="feat-title-ar">العرض السنوي والرسوم البيانية</span>
-            </div>
-            <div class="feat-desc-bi">
-              <span class="feat-desc-en">See your full year of expenses at a glance with charts and monthly breakdowns.</span>
-              <span class="feat-desc-ar">شوف كل مصاريف السنة بنظرة وحدة مع رسوم بيانية وتفاصيل كل شهر.</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="feat-item">
-          <div class="feat-num">05</div>
-          <div class="feat-body">
-            <div class="feat-title-bi">
-              <span class="feat-title-en">Cash & Other Assets</span>
-              <span class="feat-title-ar">الكاش والأصول الأخرى</span>
-            </div>
-            <div class="feat-desc-bi">
-              <span class="feat-desc-en">Log your bank accounts, savings, property, investments, and stocks — all counted toward your total net worth.</span>
-              <span class="feat-desc-ar">سجّل حساباتك البنكية، مدخراتك، عقاراتك، واستثماراتك — كلها تحتسب في صافي ثروتك.</span>
-            </div>
-          </div>
-        </div>
-
       </div>
+
+      <div class="feat-lr-row">
+        <div class="feat-en-col">
+          <div class="feat-title-en">Salary & Expenses</div>
+          <div class="feat-desc-en">Know exactly what's left from your salary every month after all your commitments.</div>
+        </div>
+        <div class="feat-col-div"></div>
+        <div class="feat-ar-col">
+          <div class="feat-title-ar">الراتب والمصاريف</div>
+          <div class="feat-desc-ar">اعرف شكثر يبقالك من راتبك كل شهر بعد ما تطلع كل مصاريفك والتزاماتك.</div>
+        </div>
+      </div>
+
+      <div class="feat-lr-row">
+        <div class="feat-en-col">
+          <div class="feat-title-en">Zakat Calculator</div>
+          <div class="feat-desc-en">Automatic Zakat calculation (2.5%) based on your total net worth. Highlight your Zakat month on the calendar.</div>
+        </div>
+        <div class="feat-col-div"></div>
+        <div class="feat-ar-col">
+          <div class="feat-title-ar">حاسبة الزكاة</div>
+          <div class="feat-desc-ar">حساب الزكاة أوتوماتيك (٢.٥٪) على إجمالي ثروتك. وتقدر تحدد شهر زكاتك على التقويم.</div>
+        </div>
+      </div>
+
+      <div class="feat-lr-row">
+        <div class="feat-en-col">
+          <div class="feat-title-en">Year View & Charts</div>
+          <div class="feat-desc-en">See your full year of expenses at a glance with charts and monthly breakdowns.</div>
+        </div>
+        <div class="feat-col-div"></div>
+        <div class="feat-ar-col">
+          <div class="feat-title-ar">العرض السنوي</div>
+          <div class="feat-desc-ar">شوف كل مصاريف السنة بنظرة وحدة مع رسوم بيانية وتفاصيل كل شهر.</div>
+        </div>
+      </div>
+
+      <div class="feat-lr-row" style="border-bottom:none">
+        <div class="feat-en-col">
+          <div class="feat-title-en">Cash & Other Assets</div>
+          <div class="feat-desc-en">Log your bank accounts, savings, property, investments, and stocks — all counted toward your total net worth.</div>
+        </div>
+        <div class="feat-col-div"></div>
+        <div class="feat-ar-col">
+          <div class="feat-title-ar">الكاش والأصول</div>
+          <div class="feat-desc-ar">سجّل حساباتك البنكية، مدخراتك، عقاراتك، واستثماراتك — كلها تحتسب في صافي ثروتك.</div>
+        </div>
+      </div>
+
     </div>
   </div>
 
   <div style="text-align:center;padding:24px 0;color:var(--t6);font-size:12px;border-top:1px solid var(--bdr)">
-    Made with care · Kuwait · <span style="color:var(--gold)">ميزان</span><br>
-    <span style="margin-top:6px;display:inline-block">Designed &amp; conceptualized by <span style="color:var(--gold2)">Abdulrahman Faraj</span></span>
+    Made with care · Kuwait · <span style="color:var(--gold)">ميزان</span>
   </div>
 </div>
 
