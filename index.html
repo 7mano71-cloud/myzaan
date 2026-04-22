@@ -46,6 +46,25 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .page.active{display:block}
 @keyframes pgIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 
+/* ── DESKTOP RESPONSIVE ── */
+@media(min-width:961px){
+  .page{padding:44px 48px;max-width:1200px;margin-left:auto;margin-right:auto;box-sizing:border-box}
+  /* Grids are fine on desktop as-is but cap them properly */
+  .g4{grid-template-columns:repeat(4,1fr)}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g2{grid-template-columns:1fr 1fr}
+  .month-grid{grid-template-columns:repeat(4,1fr)}
+  .dash-main-row{grid-template-columns:1fr 1fr}
+  .salary-row{flex-direction:row;align-items:center}
+  .sal-inp-wrap{width:220px}
+}
+@media(min-width:1400px){
+  :root{--sb-w:280px}
+  #main{margin-left:var(--sb-w)}
+  .page{padding:52px 60px;max-width:1320px}
+  .g4{grid-template-columns:repeat(4,1fr)}
+}
+
 /* BRAND / NAV */
 .brand{padding:36px 28px 28px;border-bottom:1px solid var(--bdr)}
 .brand-name{font-family:'Cormorant Garamond',serif;font-size:30px;font-style:italic;font-weight:500;background:linear-gradient(135deg,var(--gold),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
@@ -119,8 +138,8 @@ input[type=number]::-webkit-inner-spin-button{opacity:.3}
 /* TABLE */
 .tbl-wrap{overflow-x:auto;border-radius:var(--rlg);border:1px solid var(--bdr)}
 table{width:100%;border-collapse:collapse;min-width:500px}
-thead th{padding:11px 14px;text-align:left;font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--t6);background:var(--n900);border-bottom:1px solid var(--bdr);white-space:nowrap}
-tbody td{padding:12px 14px;font-size:13px;border-bottom:1px solid rgba(226,185,106,.05);vertical-align:middle}
+thead th{padding:11px 10px;text-align:left;font-size:9px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--t6);background:var(--n900);border-bottom:1px solid var(--bdr);white-space:nowrap}
+tbody td{padding:11px 10px;font-size:12px;border-bottom:1px solid rgba(226,185,106,.05);vertical-align:middle;white-space:nowrap}
 tbody tr:last-child td{border-bottom:none}
 tbody tr{background:var(--n800);transition:background .15s}
 tbody tr:hover{background:var(--n700)}
@@ -384,7 +403,13 @@ tbody tr:hover{background:var(--n700)}
   .fg.c3{grid-template-columns:1fr 1fr}
   #toast{bottom:16px;right:16px;left:16px;text-align:center}
   .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
-  table{min-width:600px}
+  table{min-width:600px;font-size:11px}
+  thead th{font-size:9px;padding:8px 10px}
+  tbody td{padding:9px 10px;font-size:11px}
+  .badge{font-size:10px;padding:2px 7px}
+  .mpill{min-width:80px;padding:7px 10px}
+  .mpill-label{font-size:9px}
+  .mpill-val{font-size:14px}
 }
 @media(max-width:600px){
   .g2,.g3,.g4{grid-template-columns:1fr}
@@ -401,6 +426,10 @@ tbody tr:hover{background:var(--n700)}
   .mo-amount{font-size:18px}
   .wealth-banner{flex-direction:column;gap:16px}
   .wealth-banner>div:last-child{text-align:left}
+  /* yr 3 cards stay 3-col but smaller font */
+  #page-year .mini-label{font-size:8px}
+  #page-year .mini-val{font-size:16px}
+  #page-year .mini-card{padding:12px}
 }
 
 /* CANVAS BACKGROUND */
@@ -498,6 +527,7 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
     <button class="nav-btn" data-page="about" onclick="showPage('about')"><span class="nav-icon">ℹ</span>About Myzaan</button>
   </nav>
   <div class="sb-foot"><div class="pulse"></div>Auto-saved</div>
+  <div style="padding:10px 22px 18px;font-size:10px;color:var(--t6);letter-spacing:.08em;opacity:.7">Built by <span style="color:var(--gold2);font-weight:500">Abdulrahman Faraj</span></div>
 </aside>
 
 <div id="main">
@@ -550,8 +580,7 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
       <div class="dwc-breakdown">
         <div class="dwc-item"><span class="dwc-dot" style="background:var(--gold)"></span><span class="dwc-name">Gold</span><span class="dwc-val c-gold" id="dw-gold">KD 0</span></div>
         <div class="dwc-item"><span class="dwc-dot" style="background:var(--silver)"></span><span class="dwc-name">Silver</span><span class="dwc-val c-silver" id="dw-silver">KD 0</span></div>
-        <div class="dwc-item"><span class="dwc-dot" style="background:var(--em)"></span><span class="dwc-name">Cash</span><span class="dwc-val c-green" id="dw-cash">KD 0</span></div>
-        <div class="dwc-item"><span class="dwc-dot" style="background:var(--sky)"></span><span class="dwc-name">Other</span><span class="dwc-val c-sky" id="dw-other">KD 0</span></div>
+        <div class="dwc-item"><span class="dwc-dot" style="background:var(--em)"></span><span class="dwc-name">Other Assets</span><span class="dwc-val c-green" id="dw-cash">KD 0</span></div>
       </div>
     </div>
 
@@ -588,7 +617,7 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 <!-- WEALTH -->
 <div id="page-wealth" class="page">
   <div class="pg-header">
-    <div><div class="pg-title">My Wealth</div><div class="pg-sub">Gold · Silver · Cash · Assets · Zakat</div></div>
+    <div><div class="pg-title">My Wealth</div><div class="pg-sub">Gold · Silver · Assets · Zakat</div></div>
   </div>
   <div class="wealth-banner">
     <div>
@@ -597,8 +626,7 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
       <div style="display:flex;gap:14px;margin-top:12px;flex-wrap:wrap">
         <span style="font-size:11px;color:var(--t4)">🟡 Gold <strong class="c-gold" id="wb-gold">0</strong></span>
         <span style="font-size:11px;color:var(--t4)">⚪ Silver <strong class="c-silver" id="wb-silver">0</strong></span>
-        <span style="font-size:11px;color:var(--t4)">💵 Cash <strong class="c-green" id="wb-cash">0</strong></span>
-        <span style="font-size:11px;color:var(--t4)">🏠 Other <strong style="color:var(--sky)" id="wb-other">0</strong></span>
+        <span style="font-size:11px;color:var(--t4)">💰 Other <strong class="c-green" id="wb-cash">0</strong></span>
       </div>
     </div>
     <div style="text-align:right">
@@ -655,33 +683,17 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
   </div>
   <div class="rule"></div>
 
-  <!-- CASH -->
+  <!-- OTHER ASSETS (merged) -->
   <div class="sec">
     <div class="sec-head">
-      <div class="sec-title">💵 Cash Holdings</div>
+      <div class="sec-title">💰 Other Assets</div>
       <button class="btn btn-ghost btn-sm" onclick="addCash()">+ Add</button>
     </div>
     <div class="card">
       <div id="cash-list"></div>
       <div id="cash-total-row" style="display:none;margin-top:14px;padding-top:14px;border-top:1px solid var(--bdr);align-items:center;justify-content:space-between">
-        <span style="font-size:12px;color:var(--t4)">Total Cash</span>
+        <span style="font-size:12px;color:var(--t4)">Total</span>
         <span id="cash-total-disp" style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--em)">KD 0.000</span>
-      </div>
-    </div>
-  </div>
-  <div class="rule"></div>
-
-  <!-- OTHER ASSETS -->
-  <div class="sec">
-    <div class="sec-head">
-      <div class="sec-title">🏠 Other Assets</div>
-      <button class="btn btn-ghost btn-sm" onclick="addOther()">+ Add Asset</button>
-    </div>
-    <div class="card">
-      <div id="other-list"></div>
-      <div id="other-total-row" style="display:none;margin-top:14px;padding-top:14px;border-top:1px solid var(--bdr);align-items:center;justify-content:space-between">
-        <span style="font-size:12px;color:var(--t4)">Total Other Assets</span>
-        <span id="other-total" style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--sky)">KD 0.000</span>
       </div>
     </div>
   </div>
@@ -691,8 +703,42 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 <div id="page-commitments" class="page">
   <div class="pg-header">
     <div><div class="pg-title">Commitments</div><div class="pg-sub">Monthly expenses · Click a month to edit</div></div>
+    <button class="btn btn-ghost btn-sm" onclick="openCustomizeModal()" style="gap:6px">⚙ Customize</button>
   </div>
   <div id="greg-grid" class="month-grid"></div>
+</div>
+
+<!-- CUSTOMIZE MODAL -->
+<div id="customize-modal" class="modal-bg">
+  <div class="modal-box" style="max-width:560px">
+    <div class="modal-head">
+      <h3>⚙ Default Commitments</h3>
+      <button class="modal-close" onclick="closeCustomizeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="font-size:12px;color:var(--t4);margin-bottom:16px">أضيف التزاماتك الثابتة هنا وطبّقها على الأشهر اللي تبيها</div>
+
+      <!-- Default commits list -->
+      <div id="default-commit-list" style="margin-bottom:14px"></div>
+      <button class="btn btn-ghost btn-sm" onclick="addDefaultCommit()" style="width:100%;justify-content:center;margin-bottom:22px">+ Add</button>
+
+      <div style="height:1px;background:var(--bdr);margin-bottom:18px"></div>
+
+      <!-- Month selector -->
+      <div style="font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--t6);margin-bottom:12px">Apply to months</div>
+      <div id="month-selector" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px"></div>
+
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px">
+        <button class="btn btn-ghost btn-sm" onclick="selectAllMonths()">Select All</button>
+        <button class="btn btn-ghost btn-sm" onclick="clearMonthSelection()">Clear</button>
+      </div>
+
+      <div style="display:flex;gap:10px;justify-content:flex-end">
+        <button class="btn btn-ghost" onclick="closeCustomizeModal()">Cancel</button>
+        <button class="btn btn-gold" onclick="applyDefaultCommits()">✓ Apply to Selected</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- YEAR VIEW -->
@@ -700,13 +746,13 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
   <div class="pg-header">
     <div><div class="pg-title">Year View <span id="yr-label" style="color:var(--t4)"></span></div><div class="pg-sub">Annual expense breakdown</div></div>
   </div>
-  <div class="g3 sec">
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:32px">
     <div class="mini-card"><div class="mini-label">Total Yearly Expenses</div><div class="mini-val c-red" id="yr-total">KD 0.000</div></div>
     <div class="mini-card"><div class="mini-label">Monthly Average</div><div class="mini-val c-gold" id="yr-avg">KD 0.000</div></div>
     <div class="mini-card"><div class="mini-label">Total Remaining</div><div class="mini-val c-green" id="yr-rem">KD 0.000</div></div>
   </div>
-  <div class="g2 sec">
-    <div class="card"><div style="font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--t6);margin-bottom:16px">Expenses vs Salary</div><div class="chart-container"><canvas id="yr-chart"></canvas></div></div>
+  <div class="g2 sec" style="align-items:stretch">
+    <div class="card" style="display:flex;flex-direction:column"><div style="font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--t6);margin-bottom:16px">Expenses vs Salary</div><div class="chart-container" style="flex:1;height:0;min-height:220px"><canvas id="yr-chart"></canvas></div></div>
     <div class="card"><div style="font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--t6);margin-bottom:16px">Monthly Bars</div><div id="yr-bars" style="display:flex;flex-direction:column;gap:8px"></div></div>
   </div>
   <div class="sec">
@@ -926,7 +972,8 @@ let ST={
   goldEntries:[], silverEntries:[],
   cashRecords:[], otherAssets:[],
   months:{},
-  nMetal:1, nCash:200, nOther:100, nCommit:500
+  defaultCommits:[],
+  nMetal:1, nCash:200, nOther:100, nCommit:500, nDefault:700
 };
 let openMonthIdx=null, yrChart=null, currentMetalType='gold', editingMetalId=null;
 
@@ -999,8 +1046,8 @@ function metalTotals(type){
   return{wt,pur,cur,pl:cur-pur,plPct:pur>0?((cur-pur)/pur*100):0};
 }
 function cashTotal(){return(ST.cashRecords||[]).reduce((s,a)=>s+(parseFloat(a.value)||0),0)}
-function otherTotal(){return(ST.otherAssets||[]).reduce((s,a)=>s+(parseFloat(a.value)||0),0)}
-function totalWealth(){const g=metalTotals('gold'),s=metalTotals('silver');return g.cur+s.cur+cashTotal()+otherTotal()}
+function otherTotal(){return cashTotal()}
+function totalWealth(){const g=metalTotals('gold'),s=metalTotals('silver');return g.cur+s.cur+cashTotal()}
 function zakatAmount(){return totalWealth()*0.025}
 function monthExp(i){const m=ST.months[i];if(!m)return 0;return(m.commits||[]).reduce((s,c)=>s+(parseFloat(c.amount)||0),0)}
 function curMoIdx(){return NOW().getMonth()}
@@ -1020,7 +1067,7 @@ function renderDashboard(){
   document.getElementById('dash-prog').style.width=p+'%';
   document.getElementById('dash-pct').textContent=Math.round(p)+'%';
 
-  const w=totalWealth(),g=metalTotals('gold'),sv=metalTotals('silver'),ct=cashTotal(),ot=otherTotal();
+  const w=totalWealth(),g=metalTotals('gold'),sv=metalTotals('silver'),ct=cashTotal();
   const yearExp=Array.from({length:12},(_,i)=>monthExp(i)).reduce((a,b)=>a+b,0);
 
   document.getElementById('dash-wealth').textContent=fmtKD(w);
@@ -1028,7 +1075,6 @@ function renderDashboard(){
   document.getElementById('dw-gold').textContent=fmtKD(g.cur,2);
   document.getElementById('dw-silver').textContent=fmtKD(sv.cur,2);
   document.getElementById('dw-cash').textContent=fmtKD(ct,2);
-  document.getElementById('dw-other').textContent=fmtKD(ot,2);
   document.getElementById('dash-commits').textContent=fmtKD(exp);
   document.getElementById('d-zc').textContent=fmtKD(zakatAmount());
   document.getElementById('d-yc').textContent=fmtKD(yearExp,2);
@@ -1037,12 +1083,21 @@ function renderDashboard(){
   document.getElementById('qs-zakat').textContent=fmtKD(zakatAmount());
   document.getElementById('qs-yr').textContent=fmtKD(yearExp);
 }
-function onSalaryChange(v){ST.salary=parseFloat(v)||0;if(ST.months[curMoIdx()])ST.months[curMoIdx()].salary=ST.salary;saveST();renderDashboard()}
+function onSalaryChange(v){
+  const sal=parseFloat(v)||0;
+  ST.salary=sal;
+  // انعكس على كل الأشهر اللي ما عندها راتب مدخل يدوي
+  for(let i=0;i<12;i++){
+    if(!ST.months[i]) ST.months[i]={salary:sal,commits:[],highlight:'none'};
+    ST.months[i].salary=sal;
+  }
+  saveST();renderDashboard();
+}
 
 /* ═══ WEALTH ═══ */
 function renderWealth(){
   renderMetalTable('gold');renderMetalTable('silver');
-  renderCashList();renderOther();updateWealthBanner();
+  renderCashList();updateWealthBanner();
 }
 
 function renderMetalTable(type){
@@ -1084,14 +1139,13 @@ function renderMetalTable(type){
 }
 
 function updateWealthBanner(){
-  const g=metalTotals('gold'),sv=metalTotals('silver'),ct=cashTotal(),ot=otherTotal();
-  const w=g.cur+sv.cur+ct+ot;
+  const g=metalTotals('gold'),sv=metalTotals('silver'),ct=cashTotal();
+  const w=g.cur+sv.cur+ct;
   document.getElementById('w-total').textContent=fmtKD(w);
   document.getElementById('w-zakat').textContent=fmtKD(w*0.025);
   document.getElementById('wb-gold').textContent=fmtKD(g.cur,2);
   document.getElementById('wb-silver').textContent=fmtKD(sv.cur,2);
   document.getElementById('wb-cash').textContent=fmtKD(ct,2);
-  document.getElementById('wb-other').textContent=fmtKD(ot,2);
 }
 
 /* ─── Metal Modal ─── */
@@ -1250,12 +1304,12 @@ function renderCashList(){
   let html='';
   ST.cashRecords.forEach(a=>{
     html+=`<div style="overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:2px">
-    <div class="record-row" style="min-width:500px">
-      <input type="text" value="${esc(a.name)}" placeholder="e.g. Bank Al-Kuwait, Saving, Cash" style="flex:1.5;min-width:140px" oninput="onCashChange(${a.id},'name',this.value)">
-      <input type="date" value="${esc(a.date||'')}" style="flex:0.8;min-width:130px" oninput="onCashChange(${a.id},'date',this.value)" title="Date (optional)">
-      <div class="inp-wrap" style="flex:1;min-width:110px">
+    <div class="record-row" style="min-width:380px">
+      <input type="text" value="${esc(a.name)}" placeholder="Name" style="flex:1;min-width:80px;font-size:12px" oninput="onCashChange(${a.id},'name',this.value)">
+      <input type="date" value="${esc(a.date||'')}" style="flex:0 0 110px;min-width:0;font-size:11px" oninput="onCashChange(${a.id},'date',this.value)" title="Date (optional)">
+      <div class="inp-wrap" style="flex:0 0 110px;min-width:0">
         <span class="inp-prefix">KD</span>
-        <input type="number" class="has-prefix" value="${a.value||''}" placeholder="0.000" step="0.001" oninput="onCashChange(${a.id},'value',this.value)">
+        <input type="number" class="has-prefix" value="${a.value||''}" placeholder="0.000" step="0.001" style="font-size:12px" oninput="onCashChange(${a.id},'value',this.value)">
       </div>
       <button class="btn btn-danger btn-icon" onclick="deleteCash(${a.id})" title="Delete">✕</button>
     </div></div>`;
@@ -1265,44 +1319,106 @@ function renderCashList(){
   document.getElementById('cash-total-disp').textContent=fmtKD(cashTotal());
 }
 
-/* ─── Other Assets ─── */
-function addOther(){
-  if(!Array.isArray(ST.otherAssets)) ST.otherAssets=[];
-  ST.otherAssets.push({id:ST.nOther++,name:'',value:0});
-  saveST();renderOther();
+/* ═══ CUSTOMIZE MODAL ═══ */
+let selectedMonths=new Set();
+
+function openCustomizeModal(){
+  if(!Array.isArray(ST.defaultCommits)) ST.defaultCommits=[];
+  renderDefaultCommitList();
+  renderMonthSelector();
+  document.getElementById('customize-modal').classList.add('open');
 }
-function deleteOther(id){
-  ST.otherAssets=ST.otherAssets.filter(a=>a.id!==id);
-  saveST();renderOther();updateWealthBanner();renderDashboard();
+function closeCustomizeModal(){
+  document.getElementById('customize-modal').classList.remove('open');
 }
-function onOtherChange(id,field,val){
-  const a=ST.otherAssets.find(a=>a.id===id);
-  if(!a) return;
-  a[field]=field==='value'?(parseFloat(val)||0):val;
-  saveST();updateWealthBanner();renderDashboard();
-}
-function renderOther(){
-  const list=document.getElementById('other-list');
-  const totalRow=document.getElementById('other-total-row');
-  if(!Array.isArray(ST.otherAssets)||ST.otherAssets.length===0){
-    list.innerHTML='<div class="empty-state"><div class="empty-icon">🏗️</div><div class="empty-text">Add land, property, stocks, investments…</div></div>';
-    totalRow.style.display='none';return;
+
+function renderDefaultCommitList(){
+  const list=document.getElementById('default-commit-list');
+  if(!ST.defaultCommits.length){
+    list.innerHTML='<div style="font-size:13px;color:var(--t6);padding:8px 0;text-align:center">لا توجد التزامات ثابتة بعد</div>';
+    return;
   }
-  let html='';
-  ST.otherAssets.forEach(a=>{
-    html+=`<div style="overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:2px">
-    <div class="record-row" style="min-width:380px">
-      <input type="text" value="${esc(a.name)}" placeholder="e.g. شقة, Land, Stocks" style="flex:1.5;min-width:140px" oninput="onOtherChange(${a.id},'name',this.value)">
-      <div class="inp-wrap" style="flex:1;min-width:110px">
+  list.innerHTML=ST.defaultCommits.map(c=>`
+    <div class="commit-row">
+      <input type="text" value="${esc(c.name)}" placeholder="Expense name" style="flex:1.4"
+        oninput="updateDefaultCommit(${c.id},'name',this.value)">
+      <div class="inp-wrap" style="flex:1">
         <span class="inp-prefix">KD</span>
-        <input type="number" class="has-prefix" value="${a.value||''}" placeholder="0.000" step="0.001" oninput="onOtherChange(${a.id},'value',this.value)">
+        <input type="number" class="has-prefix" value="${c.amount||''}" placeholder="0.000" step="0.001"
+          oninput="updateDefaultCommit(${c.id},'amount',this.value)">
       </div>
-      <button class="btn btn-danger btn-icon" onclick="deleteOther(${a.id})" title="Delete">✕</button>
-    </div></div>`;
+      <button class="btn btn-danger btn-icon" onclick="deleteDefaultCommit(${c.id})">✕</button>
+    </div>`).join('');
+}
+
+function addDefaultCommit(){
+  if(!Array.isArray(ST.defaultCommits)) ST.defaultCommits=[];
+  ST.defaultCommits.push({id:ST.nDefault++,name:'',amount:0});
+  saveST();renderDefaultCommitList();
+}
+function deleteDefaultCommit(id){
+  ST.defaultCommits=ST.defaultCommits.filter(c=>c.id!==id);
+  saveST();renderDefaultCommitList();
+}
+function updateDefaultCommit(id,field,val){
+  const c=ST.defaultCommits.find(c=>c.id===id);
+  if(!c) return;
+  c[field]=field==='amount'?(parseFloat(val)||0):val;
+  saveST();
+}
+
+function renderMonthSelector(){
+  selectedMonths=new Set();
+  const el=document.getElementById('month-selector');
+  el.innerHTML=GREG.map((m,i)=>`
+    <div id="ms-${i}" onclick="toggleMonthSel(${i})"
+      style="padding:8px 10px;border-radius:var(--rmd);border:1px solid var(--bdr);
+      font-size:12px;text-align:center;cursor:pointer;transition:all .2s;
+      background:var(--n900);color:var(--t4)">
+      ${m.slice(0,3)}
+    </div>`).join('');
+}
+
+function toggleMonthSel(i){
+  if(selectedMonths.has(i)){
+    selectedMonths.delete(i);
+    document.getElementById('ms-'+i).style.cssText=
+      'padding:8px 10px;border-radius:var(--rmd);border:1px solid var(--bdr);font-size:12px;text-align:center;cursor:pointer;transition:all .2s;background:var(--n900);color:var(--t4)';
+  } else {
+    selectedMonths.add(i);
+    document.getElementById('ms-'+i).style.cssText=
+      'padding:8px 10px;border-radius:var(--rmd);border:1px solid var(--gold2);font-size:12px;text-align:center;cursor:pointer;transition:all .2s;background:var(--glow);color:var(--gold)';
+  }
+}
+function selectAllMonths(){
+  for(let i=0;i<12;i++){
+    selectedMonths.add(i);
+    const el=document.getElementById('ms-'+i);
+    if(el) el.style.cssText=
+      'padding:8px 10px;border-radius:var(--rmd);border:1px solid var(--gold2);font-size:12px;text-align:center;cursor:pointer;transition:all .2s;background:var(--glow);color:var(--gold)';
+  }
+}
+function clearMonthSelection(){
+  selectedMonths.clear();
+  renderMonthSelector();
+}
+
+function applyDefaultCommits(){
+  if(!ST.defaultCommits.length){showToast('⚠ Add commitments first');return}
+  if(!selectedMonths.size){showToast('⚠ Select at least one month');return}
+  const valid=ST.defaultCommits.filter(c=>c.name.trim()||c.amount>0);
+  selectedMonths.forEach(i=>{
+    if(!ST.months[i]) ST.months[i]={salary:ST.salary||0,commits:[],highlight:'none'};
+    // أضيف فوق اللي موجود
+    valid.forEach(c=>{
+      ST.months[i].commits.push({id:ST.nCommit++,name:c.name,amount:c.amount});
+    });
   });
-  list.innerHTML=html;
-  totalRow.style.display='flex';
-  document.getElementById('other-total').textContent=fmtKD(otherTotal());
+  saveST();
+  closeCustomizeModal();
+  renderMonthGrid();
+  renderDashboard();
+  showToast('✓ Applied to '+selectedMonths.size+' month'+(selectedMonths.size>1?'s':''));
 }
 
 /* ═══ MONTH GRID ═══ */
